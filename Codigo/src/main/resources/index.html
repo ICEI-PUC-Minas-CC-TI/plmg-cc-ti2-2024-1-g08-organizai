@@ -53,7 +53,7 @@
                 <div
                     class="card-header text-white border-top border-bottom-0 border-5 border-warning border-opacity-75 colummn-header">
                     A Fazer
-                    <button id="" type="button" class="btn btn-sm float-end" data-bs-toggle="modal" data-bs-target="#modalAddTask" onclick="document.getElementById('statusEditInput').value = 0"><i class="bi bi-plus"></i></button>
+                    <button id="" type="button" class="btn btn-sm float-end" data-bs-toggle="modal" data-bs-target="#modalAddTask" onclick="document.getElementById('statusEditInput').value = 'Pendente'"><i class="bi bi-plus"></i></button>
                 </div>
                 <div class="card-body status" id="to-do">
 
@@ -63,7 +63,7 @@
                 <div
                     class="card-header text-white border-top border-bottom-0 border-5 border-primary border-opacity-75 colummn-header">
                     Em Andamento
-                    <button id="" type="button" class="btn btn-sm float-end" data-bs-toggle="modal" data-bs-target="#modalAddTask" onclick="document.getElementById('statusEditInput').value = 1"><i class="bi bi-plus"></i></button>
+                    <button id="" type="button" class="btn btn-sm float-end" data-bs-toggle="modal" data-bs-target="#modalAddTask" onclick="document.getElementById('statusEditInput').value = 'Em Progresso'"><i class="bi bi-plus"></i></button>
                 </div>
                 <div class="card-body status doing" id="doing">
 
@@ -73,7 +73,7 @@
                 <div
                     class="card-header text-white border-top border-bottom-0 border-5 border-success border-opacity-75 colummn-header">
                     Concluído
-                    <button id="" type="button" class="btn btn-sm float-end" data-bs-toggle="modal" data-bs-target="#modalAddTask" onclick="document.getElementById('statusEditInput').value = 2"><i class="bi bi-plus"></i></button>
+                    <button id="" type="button" class="btn btn-sm float-end" data-bs-toggle="modal" data-bs-target="#modalAddTask" onclick="document.getElementById('statusEditInput').value = 'Concluída'"><i class="bi bi-plus"></i></button>
                 </div>
                 <div class="card-body status" id="done">
                     
@@ -120,9 +120,9 @@
                             <section class="col sectionInput">
                                 <label for="priority" class="form-label">Prioridade</label>
                                 <select name="priority" id="priority" class="form-select" required>
-                                    <option value="high">ALTA</option>
-                                    <option value="mid">MÉDIA</option>
-                                    <option value="low">BAIXA</option>
+                                    <option value="Alta">ALTA</option>
+                                    <option value="Média">MÉDIA</option>
+                                    <option value="Baixa">BAIXA</option>
                                 </select>
                             </section>
                         </div>
@@ -176,9 +176,9 @@
                             <section class="col sectionInput">
                                 <label for="priorityEditInput" class="form-label">Prioridade</label>
                                 <select name="priority" id="priorityEditInput" class="form-select" required>
-                                    <option value="high">ALTA</option>
-                                    <option value="mid">MÉDIA</option>
-                                    <option value="low">BAIXA</option>
+                                    <option value="Alta">ALTA</option>
+                                    <option value="Média">MÉDIA</option>
+                                    <option value="Baixa">BAIXA</option>
                                 </select>
                             </section>
                         </div>

@@ -150,10 +150,10 @@ public class TarefaDAO {
             String sql = "UPDATE public.tarefa SET "
 					+ "userid = '"+tarefa.getUsuarioID()+"', "
 					+ "titulo = '"+tarefa.getTitulo()+"', "
-					+ "descricao = '"+tarefa.getDescricao()+"' "
-					+ "prazo = '"+tarefa.getPrazo()+"' "
-					+ "prioridade = '"+tarefa.getPrioridade()+"' "
-					+ "status = '"+tarefa.getStatus()+"' "
+					+ "descricao = '"+tarefa.getDescricao()+"', "
+					+ "prazo = '"+tarefa.getPrazo()+"', "
+					+ "prioridade = '"+tarefa.getPrioridade()+"', "
+					+ "status = '"+tarefa.getStatus()+"', "
 					+ "atrasada = '"+tarefa.isAtrasada()+"' "
                     + "WHERE taskid = "+ tarefa.getTarefaID();
             
