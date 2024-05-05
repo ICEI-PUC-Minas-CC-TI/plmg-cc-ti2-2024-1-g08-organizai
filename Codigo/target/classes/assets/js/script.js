@@ -1,98 +1,3 @@
-// Declaração das tarefas e lembretes
-const tarefas = [
-  {
-    "id": 1,
-    "title": "Reunião com cliente",
-    "description": "Discutir os detalhes do novo projeto com cliente",
-    "start": "2023-09-06T09:00:00",
-    "end": "2023-09-06T11:00:00",
-    "priority": "high",
-    "status": 2,
-    "late": true
-  },
-  {
-    "id": 2,
-    "title": "Desenvolvimento de Software",
-    "description": "Trabalhar no desenvolvimento de novas funcionalidades.",
-    "start": "2023-09-05T09:00:00",
-    "end": "2023-09-05T11:00:00",
-    "priority": "mid",
-    "status": 1,
-    "late": true
-  },
-  {
-    "id": 3,
-    "title": "Revisão de Código",
-    "description": "Revisar o código para garantir qualidade e segurança.",
-    "start": "2023-09-12T11:00:00",
-    "end": "2023-09-12T13:00:00",
-    "priority": "high",
-    "status": 0,
-    "late": true
-  },
-  {
-    "id": 4,
-    "title": "Entrevista de Emprego",
-    "description": "Realizar entrevista com candidato para posição de desenvolvedor.",
-    "start": "2023-09-15T15:30:00",
-    "end": "2023-09-15T17:30:00",
-    "priority": "mid",
-    "status": 0,
-    "late": true
-  },
-  {
-    "id": 5,
-    "title": "Treinamento da Equipe",
-    "description": "Conduzir treinamento sobre novas tecnologias para a equipe.",
-    "start": "2023-09-20T10:00:00",
-    "end": "2023-09-20T12:00:00",
-    "priority": "low",
-    "status": 1,
-    "late": true
-  },
-  {
-    "id": 6,
-    "title": "Apresentação de Vendas",
-    "description": "Preparar e realizar apresentação de vendas para clientes.",
-    "start": "2023-09-25T14:30:00",
-    "end": "2023-09-25T16:30:00",
-    "priority": "high",
-    "status": 1,
-    "late": true
-  },
-  {
-    "id": 7,
-    "title": "Manutenção de Sistemas",
-    "description": "Realizar manutenção preventiva nos sistemas da empresa.",
-    "start": "2023-09-28T09:00:00",
-    "end": "2023-09-28T11:00:00",
-    "priority": "mid",
-    "status": 0,
-    "late": true
-  },
-  {
-    "id": 8,
-    "title": "Entrega de Relatório",
-    "description": "Finalizar e entregar relatório mensal aos superiores.",
-    "start": "2023-10-05T16:00:00",
-    "end": "2023-10-05T18:00:00",
-    "priority": "low",
-    "status": 2,
-    "late": true
-  },
-  {
-    "id": 9,
-    "title": "Planejamento Estratégico",
-    "description": "Participar de reunião para discutir o planejamento estratégico da empresa.",
-    "start": "2023-10-08T11:30:00",
-    "end": "2023-10-08T13:30:00",
-    "priority": "high",
-    "status": 0,
-    "late": true
-  }
-];
-let proximoIdTarefa = 10;
-
 const todo = document.getElementById('to-do');
 const doing = document.getElementById('doing');
 const done = document.getElementById('done');
@@ -115,55 +20,100 @@ const lateEditInput = document.getElementById('lateEditInput');
 const deleteId = document.getElementById('inputDeleteId');
 
 function createTask(task) {
-  tarefas.push({"id": proximoIdTarefa, ...task });
-  proximoIdTarefa++;
+  fetch('http://localhost:4567/tarefas', {
+    method: 'POST', 
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(task), 
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+  });
 }
 
-function updateTask(id, task) {
-  const index = tarefas.findIndex(tarefa => tarefa.id == id);
-  tarefas[index] = {id: id, ...task};
+function updateTask(task) {
+  fetch('http://localhost:4567/tarefas/update', {
+    method: 'PUT', 
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(task) 
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+  });
 }
 
 function deleteTask(id) {
-  const index = tarefas.findIndex(tarefa => tarefa.id === id);
-  tarefas.splice(index, 1);
+  fetch(`http://localhost:4567/tarefas/delete/${id}`)
+  .catch((error) => {
+    console.error('Error:', error);
+  });
 }
 
 function updateStatus(taskId, updatedStatus) {
-  const index = tarefas.findIndex(tarefa => tarefa.id == taskId);
-  tarefas[index].status = updatedStatus;
+  let task; 
+
+  fetch(`http://localhost:4567/tarefas/${taskId}`)
+  .then(response => response.json())
+  .then(data => {
+    task = data;
+    task.status = updatedStatus;
+    updateTask(task);
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+  });
 }
 
 function formatDate(dateValue) {
-
   let date = new Date(dateValue);
-  let month, day; 
+  let month, day, hours, minutes, seconds;
 
   if (date.getMonth() + 1 < 10) {
     month = `0${date.getMonth() + 1}`;
   } else {
     month = `${date.getMonth() + 1}`;
   }
-  
+
   if (date.getDate() < 10) {
     day = `0${date.getDate()}`;
   } else {
     day = `${date.getDate()}`;
   }
 
-  return `${day}/${month}/${date.getFullYear()}`;
+  if (date.getHours() < 10) {
+    hours = `0${date.getHours()}`;
+  } else {
+    hours = `${date.getHours()}`;
+  }
+
+  if (date.getMinutes() < 10) {
+    minutes = `0${date.getMinutes()}`;
+  } else {
+    minutes = `${date.getMinutes()}`;
+  }
+
+  if (date.getSeconds() < 10) {
+    seconds = `0${date.getSeconds()}`;
+  } else {
+    seconds = `${date.getSeconds()}`;
+  }
+
+  return `${day}/${month}/${date.getFullYear()} ${hours}:${minutes}:${seconds}`;
 }
 
 function formatStatus(status) {
-  if (status == 0) return 'To-Do'
-  else if (status == 1) return 'Doing'
-  else if (status == 2) return 'Done'
+  if (status == "Pendente") return 'To-Do'
+  else if (status == "Em Progresso") return 'Doing'
+  else if (status == "Concluída") return 'Done'
 }
 
 function formatPriority(priority) {
-  if (priority == 'high') return 'ALTA';
-  else if (priority == 'mid') return 'MÉDIA';
-  else if (priority == 'low') return 'BAIXA';
+  if (priority == 'Alta') return 'ALTA';
+  else if (priority == 'Média') return 'MÉDIA';
+  else if (priority == 'Baixa') return 'BAIXA';
 }
 
 function addButtonListener(btn, status) {
@@ -171,7 +121,7 @@ function addButtonListener(btn, status) {
     const taskContainer = btn.closest('.task');
     const taskId = taskContainer.querySelector('.id').innerText;
 
-    if (status === 1) {
+    if (status === "Em Progresso") {
       btn.innerHTML = '<i class="bi bi-check"></i>';
       btn.classList.add("check");
       btn.classList.remove("start");
@@ -187,7 +137,7 @@ function addButtonListener(btn, status) {
       taskContainer.remove();
       doing.insertBefore(taskContainer, doing.firstChild);
       addCheckButtonListener();
-    } else if (status === 2) {
+    } else if (status === "Concluída") {
       const taskBody = taskContainer.querySelector('.task-body');
       taskBody.classList.remove('border-danger-subtle', 'border-warning-subtle', 'border-success-subtle', 'border-start', 'rounded-start-2', 'border-5');
       taskBody.classList.add("border-5", "border-start", "border-success", "rounded-start-2");
@@ -219,14 +169,14 @@ function addButtonListener(btn, status) {
 function addStartButtonListener() {
   const btnsStart = document.querySelectorAll(".start");
   btnsStart.forEach((btnStart) => {
-    addButtonListener(btnStart, 1);
+    addButtonListener(btnStart, "Em Progresso");
   });
 }
 
 function addCheckButtonListener() {
   const btnsCheck = document.querySelectorAll(".check");
   btnsCheck.forEach((btnCheck) => {
-    addButtonListener(btnCheck, 2);
+    addButtonListener(btnCheck, "Concluída");
   });
 }
 
@@ -238,60 +188,60 @@ function showTaskInKanban(task) {
 
   let priorityClass = '';
 
-  if (task.priority === 'high') {
+  if (task.prioridade === 'Alta') {
     priorityClass = 'border-start rounded-start-2 border-5 border-danger-subtle';
-  } else if (task.priority === 'mid') {
+  } else if (task.prioridade === 'Média') {
     priorityClass = 'border-start rounded-start-2 border-5 border-warning-subtle';
-  } else if (task.priority === 'low') {
+  } else if (task.prioridade === 'Baixa') {
     priorityClass = 'border-start rounded-start-2 border-5 border-success-subtle';
   }
 
   let lateClass = '';
 
-  if (task.late) {
+  if (task.atrasada) {
     lateClass = 'text-danger';
   }
 
-  if (task.status == 0) {
+  if (task.status == "Pendente") {
     contentTodo = `<div class="card task">
       <div class="card-body task-body ${priorityClass}">
-      <button type="button" class="btn btn-sm float-end m-1 rounded-circle" onclick="deleteConfirm(${task.id})"><i class="bi bi-trash" title="Excluir"></i></button>
-      <button type="button" class="btn btn-sm float-end m-1 rounded-circle btn-editar" onclick="showTask(${task.id}, '${task.title}', '${task.description}','${task.start}','${task.priority}', ${task.status}, '${task.late}')"><i class="bi bi-pencil" title="Editar"></i></button>
-      <span class="id d-none" id="task${task.id}">${task.id}</span>
-      <h5 class="card-title">${task.title}</h5>
-        <p class="card-text">${task.description}</p>
-        <p class="card-text deadline ${lateClass}">Prazo: ${formatDate(task.start)}</p>
-        <p class="card-text priority">Prioridade: ${formatPriority(task.priority)}</p>
+      <button type="button" class="btn btn-sm float-end m-1 rounded-circle" onclick="deleteConfirm(${task.tarefaID})"><i class="bi bi-trash" title="Excluir"></i></button>
+      <button type="button" class="btn btn-sm float-end m-1 rounded-circle btn-editar" onclick="showTask(${task.tarefaID}, '${task.titulo}', '${task.descricao}','${task.prazo}','${task.prioridade}', '${task.status}', '${task.atrasada}')"><i class="bi bi-pencil" title="Editar"></i></button>
+      <span class="id d-none" id="task${task.tarefaID}">${task.tarefaID}</span>
+      <h5 class="card-title">${task.titulo}</h5>
+        <p class="card-text">${task.descricao}</p>
+        <p class="card-text deadline ${lateClass}">Prazo: ${formatDate(task.prazo)}</p>
+        <p class="card-text priority">Prioridade: ${formatPriority(task.prioridade)}</p>
         <button type="button" class="btn btn-sm float-end start"><i class="bi bi-play"></i></button>
       </div>
     </div>` + contentTodo;
   }
 
-  if (task.status == 1) {
+  if (task.status == "Em Progresso") {
     contentDoing = `<div class="card task">
       <div class="card-body task-body ${priorityClass}">
-      <button type="button" class="btn btn-sm float-end m-1 rounded-circle" onclick="deleteConfirm(${task.id})"><i class="bi bi-trash" title="Excluir"></i></button>
-      <button type="button" class="btn btn-sm float-end m-1 rounded-circle btn-editar" onclick="showTask(${task.id}, '${task.title}', '${task.description}','${task.start}','${task.priority}', ${task.status}, '${task.late}')"><i class="bi bi-pencil" title="Editar"></i></button>
-      <span class="id d-none" id="task${task.id}">${task.id}</span>
-      <h5 class="card-title">${task.title}</h5>
-        <p class="card-text">${task.description}</p>
-        <p class="card-text deadline ${lateClass}">Prazo: ${formatDate(task.start)}</p>
-        <p class="card-text priority">Prioridade: ${formatPriority(task.priority)}</p>
+      <button type="button" class="btn btn-sm float-end m-1 rounded-circle" onclick="deleteConfirm(${task.tarefaID})"><i class="bi bi-trash" title="Excluir"></i></button>
+      <button type="button" class="btn btn-sm float-end m-1 rounded-circle btn-editar" onclick="showTask(${task.tarefaID}, '${task.titulo}', '${task.descricao}','${task.prazo}','${task.prioridade}', '${task.status}', '${task.atrasada}')"><i class="bi bi-pencil" title="Editar"></i></button>
+      <span class="id d-none" id="task${task.tarefaID}">${task.tarefaID}</span>
+      <h5 class="card-title">${task.titulo}</h5>
+        <p class="card-text">${task.descricao}</p>
+        <p class="card-text deadline ${lateClass}">Prazo: ${formatDate(task.prazo)}</p>
+        <p class="card-text priority">Prioridade: ${formatPriority(task.prioridade)}</p>
         <button type="button" class="btn btn-sm float-end check"><i class="bi bi-check"></i></button>
       </div>
     </div>` + contentDoing;
   }
 
-  if (task.status == 2) {
+  if (task.status == "Concluída") {
     contentDone = `<div class="card task">
         <div class="card-body task-body border-5 border-start border-success rounded-start-2">
-          <button type="button" class="btn btn-sm float-end m-1 rounded-circle" onclick="deleteConfirm(${task.id})"><i class="bi bi-trash" title="Excluir"></i></button>
-          <button type="button" class="btn btn-sm float-end m-1 rounded-circle btn-editar" onclick="showTask(${task.id}, '${task.title}', '${task.description}','${task.start}','${task.priority}', ${task.status}, '${task.late}')"><i class="bi bi-pencil" title="Editar"></i></button>
-          <span class="id d-none" id="task${task.id}">${task.id}</span>
-          <h5 class="card-title">${task.title}</h5>
-          <p class="card-text">${task.description}</p>
-          <p class="card-text deadline">Prazo: ${formatDate(task.start)}</p>
-          <p class="card-text priority">Prioridade: ${formatPriority(task.priority)}</p>
+          <button type="button" class="btn btn-sm float-end m-1 rounded-circle" onclick="deleteConfirm(${task.tarefaID})"><i class="bi bi-trash" title="Excluir"></i></button>
+          <button type="button" class="btn btn-sm float-end m-1 rounded-circle btn-editar" onclick="showTask(${task.tarefaID}, '${task.titulo}', '${task.descricao}','${task.prazo}','${task.prioridade}', '${task.status}', '${task.atrasada}')"><i class="bi bi-pencil" title="Editar"></i></button>
+          <span class="id d-none" id="task${task.tarefaID}">${task.tarefaID}</span>
+          <h5 class="card-title">${task.titulo}</h5>
+          <p class="card-text">${task.descricao}</p>
+          <p class="card-text deadline">Prazo: ${formatDate(task.prazo)}</p>
+          <p class="card-text priority">Prioridade: ${formatPriority(task.prioridade)}</p>
           <p class="float-end m-0 text-success task-status-completed">Tarefa completa!</p>
         </div>
       </div>` + contentDone;
@@ -307,7 +257,7 @@ function showTaskInKanban(task) {
   addCheckButtonListener();
 }
 
-function showTasks() {
+function showTasks(tarefas) {
 
   const table = document.getElementById('tasksTable');
   let content = '';
@@ -316,24 +266,36 @@ function showTasks() {
 
     content +=
       `<tr>
-        <td>${task.id}</td> 
-        <td>${task.title}</td> 
-        <td>${task.description}</td> 
-        <td>${formatDate(task.start)}</td> 
-        <td>${formatPriority(task.priority)}</td> 
+        <td>${task.tarefaID}</td> 
+        <td>${task.titulo}</td> 
+        <td>${task.descricao}</td> 
+        <td>${formatDate(task.prazo)}</td> 
+        <td>${formatPriority(task.prioridade)}</td> 
         <td>${formatStatus(task.status)}</td>
         <td class="text-center"><i class="bi bi-pencil" title="Editar" 
-        onclick="showTask(${task.id}, '${task.title}', '${task.description}','${task.start}','${task.priority}', ${task.status}, '${task.late}')">
+        onclick="showTask(${task.tarefaID}, '${task.titulo}', '${task.descricao}','${task.prazo}','${task.prioridade}', '${task.status}', '${task.atrasada}')">
         </i></td> 
 
         <td class="text-center"><i class="bi bi-trash" title="Excluir"
-            onclick="deleteConfirm(${task.id})"></i>
+            onclick="deleteConfirm(${task.tarefaID})"></i>
         </td>  
     </tr>`
 
   })
   if (table != null)
     table.innerHTML = content
+}
+
+function showTasksInTable() {
+
+  fetch('http://localhost:4567/tarefas')
+    .then(response => response.json())
+    .then(data => {
+        showTasks(data);
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
 }
 
 function showTask(id, title, description, start, priority, status, late) {
@@ -403,27 +365,27 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
   
-      let status = statusEditInput.value !== '' ? returnValueById('statusEditInput') : 0;
+      let status = statusEditInput.value !== '' ? returnValueById('statusEditInput') : "Pendente";
   
       let task = {
-        title: returnValueById('title'),
-        description: returnValueById('description').replace(/(\r\n|\n|\r)/gm, ""),
-        start: returnValueById('end-date'),
-        priority: returnValueById('priority'),
+        titulo: returnValueById('title'),
+        usuarioID: 1,
+        descricao: returnValueById('description').replace(/(\r\n|\n|\r)/gm, ""),
+        prazo: returnValueById('end-date'),
+        prioridade: returnValueById('priority'),
         status: status,
-        late: moment(returnValueById('end-date')).isBefore(moment())
+        atrasada: moment(returnValueById('end-date')).isBefore(moment())
       };
   
       createTask(task);
-      task.id = proximoIdTarefa - 1;
-  
+
       formAddTask.reset();
       $('#modalAddTask').modal('toggle');
   
   
       if (document.getElementById('lista') != null) {
         setTimeout(() => {
-          showTasks();
+          showTasksInTable();
           window.scrollTo(0, document.body.scrollHeight)
         }, 2000)
       }
@@ -446,18 +408,20 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
   
+      let id = parseInt(returnValueById('idEditInput'))
+
       let task = {
-        title: returnValueById('titleEditInput'),
-        description: returnValueById('descriptionEditInput').replace(/(\r\n|\n|\r)/gm, ""),
-        start: returnValueById('dateEditInput'),
-        priority: returnValueById('priorityEditInput'),
+        tarefaID: id,
+        usuarioID: 1,
+        titulo: returnValueById('titleEditInput'),
+        descricao: returnValueById('descriptionEditInput').replace(/(\r\n|\n|\r)/gm, ""),
+        prazo: returnValueById('dateEditInput'),
+        prioridade: returnValueById('priorityEditInput'),
         status: returnValueById('statusEditInput'),
-        late: moment(returnValueById('dateEditInput')).isBefore(moment())
+        atrasada: moment(returnValueById('dateEditInput')).isBefore(moment())
       }
   
-      let id = parseInt(returnValueById('idEditInput'))
-  
-      updateTask(id, task)
+      updateTask(task)
   
       formAddTask.reset()
       $('#modalEditTask').modal('toggle')
@@ -465,7 +429,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
       if (document.getElementById('lista') != null) {
         setTimeout(() => {
-          showTasks();
+          showTasksInTable();
         }, 2000)
       }
   
@@ -489,7 +453,9 @@ document.addEventListener('DOMContentLoaded', () => {
   
       $('#modalDeleteTask').modal('toggle')
 
-      showTasks();
+      setTimeout(() => {
+        showTasksInTable();
+      }, 2000)
     })
   }
 
@@ -528,7 +494,7 @@ document.addEventListener('DOMContentLoaded', () => {
           taskArray[taskArray.length - 2] = ` 0`;
           let modifiedOnclick = taskArray.join(',');
           btnEditar.setAttribute('onclick', modifiedOnclick);
-          updateStatus(taskId, 0);
+          updateStatus(taskId, "Pendente");
         }
         if (evt.to === doing) {
           const droppedTask = evt.item;
@@ -542,7 +508,7 @@ document.addEventListener('DOMContentLoaded', () => {
           taskArray[taskArray.length - 2] = ` 1`;
           let modifiedOnclick = taskArray.join(',');
           btnEditar.setAttribute('onclick', modifiedOnclick);
-          updateStatus(taskId, 1);
+          updateStatus(taskId, "Em Progresso");
         }
         if (evt.to === done) {
           const droppedTask = evt.item;
@@ -559,7 +525,7 @@ document.addEventListener('DOMContentLoaded', () => {
           btnEditar.setAttribute('onclick', modifiedOnclick);
           let prazo = droppedTask.querySelector('.deadline');
           prazo.classList.remove('text-danger');
-          updateStatus(taskId, 2);
+          updateStatus(taskId, "Concluída");
         }
       }
     });
@@ -591,7 +557,7 @@ document.addEventListener('DOMContentLoaded', () => {
           taskArray[taskArray.length - 2] = ` 0`;
           let modifiedOnclick = taskArray.join(',');
           btnEditar.setAttribute('onclick', modifiedOnclick);
-          updateStatus(taskId, 0);
+          updateStatus(taskId, "Pendente");
         }
         if (evt.to === doing) {
           const droppedTask = evt.item;
@@ -605,7 +571,7 @@ document.addEventListener('DOMContentLoaded', () => {
           taskArray[taskArray.length - 2] = ` 1`;
           let modifiedOnclick = taskArray.join(',');
           btnEditar.setAttribute('onclick', modifiedOnclick);
-          updateStatus(taskId, 1);
+          updateStatus(taskId, "Em Progresso");
         }
         if (evt.to === done) {
           const droppedTask = evt.item;
@@ -622,7 +588,7 @@ document.addEventListener('DOMContentLoaded', () => {
           btnEditar.setAttribute('onclick', modifiedOnclick);
           let prazo = droppedTask.querySelector('.deadline');
           prazo.classList.remove('text-danger');
-          updateStatus(taskId, 2);
+          updateStatus(taskId, "Concluída");
         }
       }
     });
@@ -666,7 +632,7 @@ document.addEventListener('DOMContentLoaded', () => {
           taskArray[taskArray.length - 2] = ` 0`;
           let modifiedOnclick = taskArray.join(',');
           btnEditar.setAttribute('onclick', modifiedOnclick);
-          updateStatus(taskId, 0);
+          updateStatus(taskId, "Pendente");
         }
         if (evt.to === doing) {
           const droppedTask = evt.item;
@@ -690,7 +656,7 @@ document.addEventListener('DOMContentLoaded', () => {
           taskArray[taskArray.length - 2] = ` 1`;
           let modifiedOnclick = taskArray.join(',');
           btnEditar.setAttribute('onclick', modifiedOnclick);
-          updateStatus(taskId, 1);
+          updateStatus(taskId, "Em Progresso");
         }
         if (evt.to === done) {
           const droppedTask = evt.item;
@@ -707,92 +673,129 @@ document.addEventListener('DOMContentLoaded', () => {
           btnEditar.setAttribute('onclick', modifiedOnclick);
           let prazo = droppedTask.querySelector('.deadline');
           prazo.classList.remove('text-danger');
-          updateStatus(taskId, 2);
+          updateStatus(taskId, "Concluída");
         }
       }
     });
   }
 
-  tarefas.map((task) => showTaskInKanban(task));
 
-  jQuery(function () {
-    jQuery('#calendar').fullCalendar({
-  
-      businessHours: false,
-      defaultView: 'month',
-      editable: true,
-      height: 600,
-      header: {
-        left: 'title',
-        center: 'month,agendaWeek,agendaDay',
-        right: 'prev, today, next'
-      },
-      events: tarefas, // Utiliza o array de tarefas local como eventos
-      eventDrop: function (evento, delta, revertFunc) {
-        const index = tarefas.findIndex(tarefa => tarefa.id === evento.id);
-        if (index !== -1) {
-          tarefas[index].start = evento.start.format(); // Atualiza a data de início da tarefa
-          if (evento.end) {
-            tarefas[index].end = evento.end.format(); // Atualiza a data de término da tarefa, se existir
-          }
-        }
-  
-        const eventoAtualizado = {
-          start: evento.start.format(), // Atualiza a data de início da tarefa
-          end: evento.end ? evento.end.format() : null // Atualiza a data de término da tarefa, se existir
-        };
-  
-        // Simulação de requisição para atualizar evento
-        // Aqui você pode colocar sua lógica para atualizar o evento no servidor
-        // Esta parte está apenas simulando a atualização localmente
-        setTimeout(() => {
-          console.log("Evento atualizado:", eventoAtualizado);
-          // Aqui você pode adicionar sua lógica para enviar os dados atualizados para o servidor
-        }, 1000);
-      },
-      eventRender: function (event, element) {
-        if (event.end && event.end.isBefore(moment())) {
-          element.css('background-color', 'red');
-        }
-  
-        // Simulação de requisição para atualizar evento
-        // Aqui você pode colocar sua lógica para atualizar o evento no servidor
-        // Esta parte está apenas simulando a atualização localmente
-        setTimeout(() => {
-          if (event.late !== true) {
+  fetch('http://localhost:4567/tarefas')
+    .then(response => response.json())
+    .then(data => {
+        data.forEach(task => {
+          showTaskInKanban(task);
+        });
+        let tarefas = data; // Armazena os dados da resposta na array de tarefas
+
+
+      jQuery(function () {
+        jQuery('#calendar').fullCalendar({
+
+          businessHours: false,
+          defaultView: 'month',
+          editable: true,
+          height: 600,
+          header: {
+            left: 'title',
+            center: 'month,agendaWeek,agendaDay',
+            right: 'prev, today, next'
+          },
+          events: tarefas, // Adiciona as tarefas ao calendário como eventos    
+          eventDrop: function (evento, delta, revertFunc) {
             const eventoAtualizado = {
-              late: true
+              start: evento.start.format(), // Atualiza a data de início da tarefa
+              end: evento.end ? evento.end.format() : null // Atualiza a data de término da tarefa, se existir
             };
-            console.log("Evento atualizado:", eventoAtualizado);
-            // Aqui você pode adicionar sua lógica para enviar os dados atualizados para o servidor
-          }
-        }, 1000);
-      },
-      dayClick: function(date) {
-        // Aqui você pode adicionar a lógica para lidar com o clique em um dia
-      },
-  
-      locale: 'pt-br', // Define o idioma para português brasileiro
-      buttonText: {
-        today: 'Hoje',
-        month: 'Mês',
-        week: 'Semana',
-        day: 'Dia',
-      },
-      monthNames: [
-        'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-        'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
-      ],
-      monthNamesShort: [
-        'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun',
-        'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'
-      ],
-      dayNames: [
-        'Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'
-      ],
-      dayNamesShort: [
-        'Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'
-      ]
+
+
+            fetch(``, {
+              method: 'PATCH',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(eventoAtualizado) // Inclui todas as informações necessárias
+            })
+              .then(response => response.json()) // Converte a resposta para JSON
+              .then(updatedEvent => {
+
+                const index = tarefas.findIndex(tarefa => tarefa.id === updatedEvent.id);
+                tarefas[index] = updatedEvent;
+
+
+                jQuery('#calendar').fullCalendar('refetchEvents');
+              })
+              .catch(error => {
+                console.error('Erro ao atualizar a tarefa:', error);
+                revertFunc(); // Reverte a mudança se houver um erro na atualização
+              });
+          },
+          eventRender: function (event, element) {
+
+            if (event.end && event.end.isBefore(moment())) {
+
+              element.css('background-color', 'red');
+              if (event.late !== true) {
+                const eventoAtualizado = {
+                  late: true
+                };
+
+
+                fetch(`https://replit.com/@MateusADM/Json-Server-Web-API#data.json/${event.id}`, {
+                  method: 'PATCH',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify(eventoAtualizado), // Inclui todas as informações necessárias
+                })
+              }
+            } else if (event.late !== false) {
+              const eventoAtualizado = {
+                late: false
+              };
+
+
+              fetch(`https://replit.com/@MateusADM/Json-Server-Web-API#data.json/${event.id}`, {
+                method: 'PATCH',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(eventoAtualizado), // Inclui todas as informações necessárias
+              })
+            }
+          },
+          dayClick: function(date) {
+            formAddTask.reset();
+            let formattedDate = date.format('YYYY-MM-DD  HH:mm').replace('  ', 'T');
+            document.querySelector("#end-date").value = formattedDate;
+            $('#modalAddTask').modal('toggle');
+          },
+
+          locale: 'pt-br', // Define o idioma para português brasileiro
+          buttonText: {
+            today: 'Hoje',
+            month: 'Mês',
+            week: 'Semana',
+            day: 'Dia',
+          },
+          monthNames: [
+            'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+            'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+          ],
+          monthNamesShort: [
+            'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun',
+            'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'
+          ],
+          dayNames: [
+            'Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'
+          ],
+          dayNamesShort: [
+            'Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'
+          ]
+        });
+      });
+    })
+    .catch((error) => {
+      console.error('Error:', error);
     });
-  });
 });

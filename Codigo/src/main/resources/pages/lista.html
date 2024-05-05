@@ -10,13 +10,13 @@
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="../assets/css/style.css">
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script src="https://SortableJS.github.io/Sortable/Sortable.js"></script>
     <link rel="icon" type=" image/x-icon" href="../assets/images/lista-de-tarefas.png">
     <script src="../assets/js/script.js" defer></script>
 </head>
 
-<body onload="showTasks()">
+<body onload="showTasksInTable()">
 
     <header>
         <nav class="navbar navbar-dark navbar-expand-lg">
@@ -109,9 +109,9 @@
                             <section class="col sectionInput">
                                 <label for="priority" class="form-label">Prioridade</label>
                                 <select name="priority" id="priority" class="form-select" required>
-                                    <option value="high">ALTA</option>
-                                    <option value="mid">MÉDIA</option>
-                                    <option value="low">BAIXA</option>
+                                    <option value="Alta">ALTA</option>
+                                    <option value="Média">MÉDIA</option>
+                                    <option value="Baixa">BAIXA</option>
                                 </select>
                             </section>
                         </div>
@@ -165,9 +165,9 @@
                             <section class="col sectionInput">
                                 <label for="priorityEditInput" class="form-label">Prioridade</label>
                                 <select name="priority" id="priorityEditInput" class="form-select" required>
-                                    <option value="high">ALTA</option>
-                                    <option value="mid">MÉDIA</option>
-                                    <option value="low">BAIXA</option>
+                                    <option value="Alta">ALTA</option>
+                                    <option value="Média">MÉDIA</option>
+                                    <option value="Baixa">BAIXA</option>
                                 </select>
                             </section>
                         </div>
