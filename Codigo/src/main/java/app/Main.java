@@ -51,8 +51,8 @@ public class Main {
 
 		post("/lembretes", (req,res) -> lembreteService.create(req, res));
 		get ("/lembretes", (req, res) -> lembreteService.readAll(req, res));
-		get ("/lembretes/:atomicNum", (req, res) -> lembreteService.read(req, res));
+		get ("/lembretes/:reminderid", (req, res) -> lembreteService.read(req, res));
 		put ("/lembretes/update", (req, res) -> lembreteService.update(req, res));
-		get ("/lembretes/delete/:atomicNum", (req, res) -> lembreteService.delete(req, res));
+		get ("/lembretes/delete/:reminderid", (req, res) -> lembreteService.delete(req, res));
 	}
 }

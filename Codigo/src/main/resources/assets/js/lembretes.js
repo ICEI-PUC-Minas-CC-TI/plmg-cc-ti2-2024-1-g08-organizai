@@ -33,8 +33,9 @@ btnCreateReminder.addEventListener('click', event => {
     }
 
     let reminder = {
-        title: returnValeuById('title'),
-        content: returnValeuById('content').replace(/(\r\n|\n|\r)/gm,"")
+        usuarioID: 1,
+        nome: returnValeuById('title'),
+        conteudo: returnValeuById('content').replace(/(\r\n|\n|\r)/gm,"")
     }
 
     createReminder(reminder)
@@ -44,7 +45,7 @@ btnCreateReminder.addEventListener('click', event => {
 
     //rolar até o fim da página para mostrar o novo lemrete adicionado
     setTimeout(() => { 
-        showReminders()
+        readReminders()
         window.scrollTo(0, document.body.scrollHeight)
     }, 2000)
 
@@ -64,8 +65,9 @@ btnEditReminder.addEventListener("click", (event) => {
     }
 
     let reminder = {
-        title: returnValeuById('inputEditTitle'),
-        content: returnValeuById('inputEditContent').replace(/(\r\n|\n|\r)/gm,""),
+        usuarioID: 1,
+        nome: returnValeuById('inputEditTitle'),
+        conteudo: returnValeuById('inputEditContent').replace(/(\r\n|\n|\r)/gm,""),
     }
 
     let id = parseInt(returnValeuById('inputEditId'))
@@ -77,7 +79,7 @@ btnEditReminder.addEventListener("click", (event) => {
 
     //atualizar a tabela da dados
     setTimeout(() => { 
-        showReminders()
+        readReminders()
     }, 2000)
 
 })
@@ -93,7 +95,7 @@ btnDeleteReminder.addEventListener('click', () => {
 
     //atualizar a tabela da dados
     setTimeout(() => { 
-        showReminders()
+        readReminders()
     }, 2000)
 })
 
@@ -129,23 +131,23 @@ function displayErrMessage(mensagem) {
 }
 
 //funcoes para exibir dados e modais na tela
-function showReminders() {
+function showReminders(reminders) {
 
     const table = document.getElementById('remindersTable');
     let content = '';
 
-    lembretes.forEach(lembrete => {
+    reminders.forEach(reminder => {
 
     content +=
     `<tr>
-        <td>${lembrete.title}</td> 
-        <td>${lembrete.content}</td> 
+        <td>${reminder.nome}</td> 
+        <td>${reminder.conteudo}</td> 
         <td class="text-center"><i class="bi bi-pencil" title="Editar" 
-            onclick="showReminder(${lembrete.id}, '${lembrete.title}', '${lembrete.content}')">
+            onclick="showReminder(${reminder.lembreteID}, '${reminder.nome}', '${reminder.conteudo}')">
         </i></td> 
 
         <td class="text-center"><i class="bi bi-trash" title="Excluir"
-            onclick="deleteConfirm(${lembrete.id})"></i>
+            onclick="deleteConfirm(${reminder.lembreteID})"></i>
         </td> 
     </tr>`
 
@@ -169,16 +171,60 @@ function deleteConfirm(id) {
 }
 
 function createReminder(reminder) {
-    lembretes.push({"id": proximoIdLembrete, ...reminder });
-    proximoIdLembrete++;
+    fetch('http://localhost:4567/lembretes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(reminder)
+
+    })
+    .catch(error => {
+        console.error(error)
+    })
+}
+
+function readReminders() {
+    fetch('http://localhost:4567/lembretes')
+    .then(response => response.json())
+    .then(data => {
+        showReminders(data);
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+}
+
+function readReminder(id) {
+    fetch(`http://localhost:4567/lembretes/${id}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+    })
+    .then(res => res.json())
+    .then(data => {showReminder(data)})
+    .catch(error => {
+        console.error(error)
+    })
 }
 
 function updateReminder(id, reminder) {
-    const index = lembretes.findIndex(lembrete => lembrete.id == id);
-    lembretes[index] = {id: id, ...reminder};
+    reminder = {lembreteID: id, ...reminder};
+    
+    fetch('http://localhost:4567/lembretes/update', {
+    method: 'PUT', 
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(reminder) 
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+  });
 }
 
 function deleteReminder(id) {
-    const index = lembretes.findIndex(lembrete => lembrete.id === id);
-    lembretes.splice(index, 1);
+    fetch(`http://localhost:4567/lembretes/delete/${id}`, {
+        method: 'GET'
+    })
+    .catch(error => {
+        console.error(error)
+    })
 }
