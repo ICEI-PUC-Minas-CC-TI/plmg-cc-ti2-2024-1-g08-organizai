@@ -1,22 +1,3 @@
-const lembretes = [
-    {
-      "title": "Lembrete 1",
-      "content": "Desligar o celular antes de começar",
-      "id": 1
-    },
-    {
-      "title": "Lembrete 2",
-      "content": "Pegar uma garrafa de água",
-      "id": 2
-    },
-    {
-      "id": 3,
-      "title": "Corrigir trabalhos",
-      "content": "Corrigir trabalhos."
-    }
-];
-let proximoIdLembrete = 4;
-
 //passando os elementos como objetos
 const formAddReminder = document.getElementById('formAddReminder')
 const formEditReminder = document.getElementById('formEditReminder')

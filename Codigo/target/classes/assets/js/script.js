@@ -286,6 +286,18 @@ function showTasks(tarefas) {
     table.innerHTML = content
 }
 
+function showTasksInTable() {
+
+  fetch('http://localhost:4567/tarefas')
+    .then(response => response.json())
+    .then(data => {
+        showTasks(data);
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+}
+
 function showTask(id, title, description, start, priority, status, late) {
 
   idEditInput.value = id
@@ -373,7 +385,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
       if (document.getElementById('lista') != null) {
         setTimeout(() => {
-          showTasks();
+          showTasksInTable();
           window.scrollTo(0, document.body.scrollHeight)
         }, 2000)
       }
@@ -417,7 +429,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
       if (document.getElementById('lista') != null) {
         setTimeout(() => {
-          showTasks();
+          showTasksInTable();
         }, 2000)
       }
   
@@ -441,7 +453,9 @@ document.addEventListener('DOMContentLoaded', () => {
   
       $('#modalDeleteTask').modal('toggle')
 
-      showTasks();
+      setTimeout(() => {
+        showTasksInTable();
+      }, 2000)
     })
   }
 
@@ -669,7 +683,6 @@ document.addEventListener('DOMContentLoaded', () => {
   fetch('http://localhost:4567/tarefas')
     .then(response => response.json())
     .then(data => {
-        showTasks(data);
         data.forEach(task => {
           showTaskInKanban(task);
         });
