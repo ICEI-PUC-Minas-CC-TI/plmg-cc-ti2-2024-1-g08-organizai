@@ -1,5 +1,4 @@
 package dao;
-
 import java.sql.*;
 import model.Lembrete;
 
@@ -58,14 +57,18 @@ public class LembreteDAO {
 		boolean status = false;
 		
 		try {
-			Statement st = conn.createStatement();
-			st.executeUpdate("INSERT INTO public.lembrete(userid, nome, conteudo) "
-					+ "VALUES ("+ lembrete.getUsuarioID() +", "
-						   + "'"+ lembrete.getNome()+"', "
-						   + "'"+ lembrete.getConteudo()+"');");
+			String sql = "INSERT INTO public.lembrete(userid, nome, conteudo) VALUES (?, ?, ?)";
+			PreparedStatement ps = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			ps.setInt(1, lembrete.getUsuarioID());
+			ps.setString(2, lembrete.getNome());
+			ps.setString(3, lembrete.getConteudo());
 			
-			st.close();
-			status = true;
+			int rowsInserted = ps.executeUpdate();
+			if (rowsInserted > 0) {
+				status = true;
+			}
+			
+			ps.close();
 			
 		}catch(SQLException e){
 			System.err.println(e.getMessage());
@@ -79,8 +82,9 @@ public class LembreteDAO {
 		Lembrete[] lembretes = null;
 		
 		try {
-			Statement st = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-			ResultSet rs = st.executeQuery("SELECT * FROM public.lembrete ORDER BY reminderid ASC;");
+			String sql = "SELECT nome, conteudo, reminderid, userid FROM public.lembrete ORDER BY reminderid ASC";
+			PreparedStatement ps = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			ResultSet rs = ps.executeQuery();
 			
 			if(rs.next()) {
 				rs.last();
@@ -95,7 +99,7 @@ public class LembreteDAO {
 				}
 			}
 			
-			st.close();
+			ps.close();
 			
 		}catch(SQLException e){
 			System.err.println(e.getMessage());
@@ -109,19 +113,20 @@ public class LembreteDAO {
 		Lembrete lembrete = null;
 		
 		try {
-			PreparedStatement ps = conn.prepareStatement("SELECT * FROM public.lembrete WHERE reminderid = ?");
-            ps.setInt(1, reminderid);
-            ResultSet rs = ps.executeQuery();
-            
+			String sql = "SELECT nome, conteudo, reminderid, userid FROM public.lembrete WHERE reminderid = ?";
+			PreparedStatement ps = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			ps.setInt(1, reminderid);
+			ResultSet rs = ps.executeQuery();
+			
 			if(rs.next()) {
 				
 				lembrete = new Lembrete(rs.getInt("reminderid"),
-                        rs.getInt("reminderid"), 
-                        rs.getString("nome"), 
-                        rs.getString("conteudo"));
+						rs.getInt("reminderid"), 
+						rs.getString("nome"), 
+						rs.getString("conteudo"));
 			}
-             
-            ps.close();
+			 
+			ps.close();
 			
 		}catch(SQLException e){
 			System.err.println(e.getMessage());
@@ -135,16 +140,20 @@ public class LembreteDAO {
 		boolean status = false;
 		
 		try {
-            Statement st = conn.createStatement();
-            String sql = "UPDATE public.lembrete SET "
-					+ "userid = '"+lembrete.getUsuarioID()+"', "
-					+ "nome = '"+lembrete.getNome()+"', "
-					+ "conteudo = '"+lembrete.getConteudo()+"' "
-                    + "WHERE reminderid = "+ lembrete.getLembreteID();
-            
-            st.executeUpdate(sql);
-            st.close();
-            status = true;
+			String sql = "UPDATE public.lembrete SET userid = ?, nome = ?, conteudo = ? WHERE reminderid = ?";
+			PreparedStatement ps = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			ps.setInt(1, lembrete.getUsuarioID());
+			ps.setString(2, lembrete.getNome());
+			ps.setString(3, lembrete.getConteudo());
+			ps.setInt(4, lembrete.getLembreteID());
+			
+			int rowsUpdated = ps.executeUpdate();
+			if (rowsUpdated > 0) {
+				status = true;
+			}
+			
+			ps.close();
+			
 		}catch(SQLException e){
 			System.err.println(e.getMessage());
 		}
@@ -158,12 +167,17 @@ public class LembreteDAO {
 		boolean status = false;
 		
 		try {
-			PreparedStatement ps = conn.prepareStatement("DELETE FROM public.lembrete WHERE reminderid = ?");
-            ps.setInt(1, lembrete.getLembreteID());
-            ps.executeUpdate();
-            ps.close();
-            
-            status = true;
+			String sql = "DELETE FROM public.lembrete WHERE reminderid = ?";
+			PreparedStatement ps = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			ps.setInt(1, lembrete.getLembreteID());
+			
+			int rowsDeleted = ps.executeUpdate();
+			if (rowsDeleted > 0) {
+				status = true;
+			}
+			
+			ps.close();
+			
 		}catch(SQLException e){
 			System.err.println(e.getMessage());
 		}

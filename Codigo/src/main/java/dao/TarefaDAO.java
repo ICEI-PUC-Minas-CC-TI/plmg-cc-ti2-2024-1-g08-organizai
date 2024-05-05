@@ -1,5 +1,4 @@
 package dao;
-
 import java.sql.*;
 import model.Tarefa;
 
@@ -58,16 +57,20 @@ public class TarefaDAO {
 		boolean status = false;
 		
 		try {
-			Statement st = conn.createStatement();
-			st.executeUpdate("INSERT INTO public.tarefa(userid, titulo, descricao, prazo, prioridade, status) "
-					+ "VALUES ("+ tarefa.getUsuarioID() +", "
-						   + "'"+ tarefa.getTitulo()+"', "
-						   + "'"+ tarefa.getDescricao()+"', "
-						   + "'"+ tarefa.getPrazo()+"', "
-						   + "'"+ tarefa.getPrioridade()+"', "
-						   + "'"+ tarefa.getStatus()+"');");
+			String sql = "INSERT INTO public.tarefa(userid, titulo, descricao, prazo, prioridade, status) "
+					+ "VALUES (?, ?, ?, CAST(? AS timestamp), ?, ?)";
 			
-			st.close();
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setInt(1, tarefa.getUsuarioID());
+			ps.setString(2, tarefa.getTitulo());
+			ps.setString(3, tarefa.getDescricao());
+			ps.setString(4, tarefa.getPrazo());
+			ps.setString(5, tarefa.getPrioridade());
+			ps.setString(6, tarefa.getStatus());
+			
+			ps.executeUpdate();
+			
+			ps.close();
 			status = true;
 			
 		}catch(SQLException e){
@@ -82,8 +85,10 @@ public class TarefaDAO {
 		Tarefa[] tarefas = null;
 		
 		try {
-			Statement st = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-			ResultSet rs = st.executeQuery("SELECT * FROM public.tarefa ORDER BY taskid ASC;");
+			String sql = "SELECT titulo, descricao, prazo, prioridade, status, atrasada, taskid, userid FROM public.tarefa ORDER BY taskid ASC";
+			
+			PreparedStatement ps = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			ResultSet rs = ps.executeQuery();
 			
 			if(rs.next()) {
 				rs.last();
@@ -102,7 +107,7 @@ public class TarefaDAO {
 				}
 			}
 			
-			st.close();
+			ps.close();
 			
 		}catch(SQLException e){
 			System.err.println(e.getMessage());
@@ -116,23 +121,26 @@ public class TarefaDAO {
 		Tarefa tarefa = null;
 		
 		try {
-			PreparedStatement ps = conn.prepareStatement("SELECT * FROM public.tarefa WHERE taskid = ?");
-            ps.setInt(1, taskid);
-            ResultSet rs = ps.executeQuery();
-            
+			String sql = "SELECT titulo, descricao, prazo, prioridade, status, atrasada, taskid, userid FROM public.tarefa WHERE taskid = ?";
+			
+			PreparedStatement ps = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			ps.setInt(1, taskid);
+			
+			ResultSet rs = ps.executeQuery();
+			
 			if(rs.next()) {
 				
 				tarefa = new Tarefa(rs.getInt("taskid"),
-                rs.getInt("userid"), 
-                rs.getString("titulo"), 
-                rs.getString("descricao"), 
-                rs.getString("prazo"), 
-                rs.getString("prioridade"), 
-                rs.getString("status"), 
-                rs.getBoolean("atrasada"));
+				rs.getInt("userid"), 
+				rs.getString("titulo"), 
+				rs.getString("descricao"), 
+				rs.getString("prazo"), 
+				rs.getString("prioridade"), 
+				rs.getString("status"), 
+				rs.getBoolean("atrasada"));
 			}
-             
-            ps.close();
+			 
+			ps.close();
 			
 		}catch(SQLException e){
 			System.err.println(e.getMessage());
@@ -146,39 +154,52 @@ public class TarefaDAO {
 		boolean status = false;
 		
 		try {
-            Statement st = conn.createStatement();
-            String sql = "UPDATE public.tarefa SET "
-					+ "userid = '"+tarefa.getUsuarioID()+"', "
-					+ "titulo = '"+tarefa.getTitulo()+"', "
-					+ "descricao = '"+tarefa.getDescricao()+"', "
-					+ "prazo = '"+tarefa.getPrazo()+"', "
-					+ "prioridade = '"+tarefa.getPrioridade()+"', "
-					+ "status = '"+tarefa.getStatus()+"', "
-					+ "atrasada = '"+tarefa.isAtrasada()+"' "
-                    + "WHERE taskid = "+ tarefa.getTarefaID();
-            
-            st.executeUpdate(sql);
-            st.close();
-            status = true;
+			String sql = "UPDATE public.tarefa SET "
+					+ "userid = ?, "
+					+ "titulo = ?, "
+					+ "descricao = ?, "
+					+ "prazo = CAST(? AS timestamp), "
+					+ "prioridade = ?, "
+					+ "status = ?, "
+					+ "atrasada = ? "
+					+ "WHERE taskid = ?";
+			
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setInt(1, tarefa.getUsuarioID());
+			ps.setString(2, tarefa.getTitulo());
+			ps.setString(3, tarefa.getDescricao());
+			ps.setString(4, tarefa.getPrazo());
+			ps.setString(5, tarefa.getPrioridade());
+			ps.setString(6, tarefa.getStatus());
+			ps.setBoolean(7, tarefa.isAtrasada());
+			ps.setInt(8, tarefa.getTarefaID());
+			
+			ps.executeUpdate();
+			
+			ps.close();
+			status = true;
 		}catch(SQLException e){
 			System.err.println(e.getMessage());
 		}
 		
 		return status;
-	}
-	
+	}	
+
 	
 	public boolean deleteTarefa(Tarefa tarefa) {
 		
 		boolean status = false;
 		
 		try {
-			PreparedStatement ps = conn.prepareStatement("DELETE FROM public.tarefa WHERE taskid = ?");
-            ps.setInt(1, tarefa.getTarefaID());
-            ps.executeUpdate();
-            ps.close();
-            
-            status = true;
+			String sql = "DELETE FROM public.tarefa WHERE taskid = ?";
+			
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setInt(1, tarefa.getTarefaID());
+			
+			ps.executeUpdate();
+			
+			ps.close();
+			status = true;
 		}catch(SQLException e){
 			System.err.println(e.getMessage());
 		}
