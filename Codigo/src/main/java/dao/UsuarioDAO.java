@@ -58,14 +58,17 @@ public class UsuarioDAO {
 		boolean status = false;
 		
 		try {
-			Statement st = conn.createStatement();
-			st.executeUpdate("INSERT INTO public.usuario(email, senhahash, nome) "
-					+ "VALUES ("+ usuario.getEmail() +", "
-						   + "'"+ usuario.getSenha()+"', "
-						   + "'"+ usuario.getNome()+"');");
+			PreparedStatement ps = conn.prepareStatement("INSERT INTO public.usuario(email, senhahash, nome) VALUES (?, ?, ?)");
+			ps.setString(1, usuario.getEmail());
+			ps.setString(2, usuario.getSenha());
+			ps.setString(3, usuario.getNome());
 			
-			st.close();
-			status = true;
+			int rowsInserted = ps.executeUpdate();
+			if (rowsInserted > 0) {
+				status = true;
+			}
+			
+			ps.close();
 			
 		}catch(SQLException e){
 			System.err.println(e.getMessage());
@@ -80,7 +83,7 @@ public class UsuarioDAO {
 		
 		try {
 			Statement st = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-			ResultSet rs = st.executeQuery("SELECT * FROM public.usuario ORDER BY userid ASC;");
+			ResultSet rs = st.executeQuery("SELECT email, nome, senhahash, userid FROM public.usuario ORDER BY userid ASC;");
 			
 			if(rs.next()) {
 				rs.last();
@@ -109,10 +112,10 @@ public class UsuarioDAO {
 		Usuario usuario = null;
 		
 		try {
-			PreparedStatement ps = conn.prepareStatement("SELECT * FROM public.usuario WHERE userid = ?");
-            ps.setInt(1, userid);
-            ResultSet rs = ps.executeQuery();
-            
+			PreparedStatement ps = conn.prepareStatement("SELECT email, nome, senhahash, userid FROM public.usuario WHERE userid = ?");
+			ps.setInt(1, userid);
+			ResultSet rs = ps.executeQuery();
+			
 			if(rs.next()) {
 				
 				usuario = new Usuario(rs.getInt("userid"),
@@ -120,8 +123,8 @@ public class UsuarioDAO {
 						rs.getString("email"), 
 						rs.getString("senhahash"));
 			}
-             
-            ps.close();
+			 
+			ps.close();
 			
 		}catch(SQLException e){
 			System.err.println(e.getMessage());
@@ -135,16 +138,19 @@ public class UsuarioDAO {
 		boolean status = false;
 		
 		try {
-            Statement st = conn.createStatement();
-            String sql = "UPDATE public.usuario SET "
-					+ "nome = '"+usuario.getNome()+"', "
-					+ "email = '"+usuario.getEmail()+"', "
-					+ "senhahash = '"+usuario.getSenha()+"' "
-                    + "WHERE userid = "+ usuario.getUsuarioID();
-            
-            st.executeUpdate(sql);
-            st.close();
-            status = true;
+			PreparedStatement ps = conn.prepareStatement("UPDATE public.usuario SET nome = ?, email = ?, senhahash = ? WHERE userid = ?");
+			ps.setString(1, usuario.getNome());
+			ps.setString(2, usuario.getEmail());
+			ps.setString(3, usuario.getSenha());
+			ps.setInt(4, usuario.getUsuarioID());
+			
+			int rowsUpdated = ps.executeUpdate();
+			if (rowsUpdated > 0) {
+				status = true;
+			}
+			
+			ps.close();
+			
 		}catch(SQLException e){
 			System.err.println(e.getMessage());
 		}
@@ -159,11 +165,15 @@ public class UsuarioDAO {
 		
 		try {
 			PreparedStatement ps = conn.prepareStatement("DELETE FROM public.usuario WHERE userid = ?");
-            ps.setInt(1, usuario.getUsuarioID());
-            ps.executeUpdate();
-            ps.close();
-            
-            status = true;
+			ps.setInt(1, usuario.getUsuarioID());
+			
+			int rowsDeleted = ps.executeUpdate();
+			if (rowsDeleted > 0) {
+				status = true;
+			}
+			
+			ps.close();
+			
 		}catch(SQLException e){
 			System.err.println(e.getMessage());
 		}
