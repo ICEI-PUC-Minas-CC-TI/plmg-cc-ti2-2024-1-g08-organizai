@@ -59,7 +59,7 @@ public class LembreteDAO {
 		
 		try {
 			Statement st = conn.createStatement();
-			st.executeUpdate("INSERT INTO public.lembrete(reminderid, nome, conteudo) "
+			st.executeUpdate("INSERT INTO public.lembrete(userid, nome, conteudo) "
 					+ "VALUES ("+ lembrete.getUsuarioID() +", "
 						   + "'"+ lembrete.getNome()+"', "
 						   + "'"+ lembrete.getConteudo()+"');");
@@ -89,7 +89,7 @@ public class LembreteDAO {
 				
 				for(int i = 0; rs.next(); i++) {
 					lembretes[i] = new Lembrete(rs.getInt("reminderid"),
-							rs.getInt("reminderid"), 
+							rs.getInt("userid"), 
 							rs.getString("nome"), 
 							rs.getString("conteudo"));
 				}
