@@ -26,9 +26,11 @@ function createTask(task) {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(task),
-  })
+  }) 
+    .then(() => carregaCalendario())
     .catch((error) => {
       console.error('Error:', error);
+      carregaCalendario();
     });
 }
 
@@ -378,10 +380,9 @@ document.addEventListener('DOMContentLoaded', () => {
       };
 
       createTask(task);
-
+      
       formAddTask.reset();
       $('#modalAddTask').modal('toggle');
-
 
       if (document.getElementById('lista') != null) {
         setTimeout(() => {
@@ -678,18 +679,25 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+  carregaCalendario();
+});
 
 
+function carregaCalendario() {
   fetch('http://localhost:4567/tarefas')
-    .then(response => response.json())
-    .then(data => {
+  .then(response => response.json())
+  .then(data => {
+      const calendar = document.getElementById('calendar');
+      if (calendar !== null) {
+        $('#calendar').fullCalendar('destroy');
+      }
       data.forEach(task => {
         showTaskInKanban(task);
       });
 
       jQuery(function () {
         jQuery('#calendar').fullCalendar({
-
+          
           businessHours: false,
           defaultView: 'month',
           editable: true,
@@ -741,7 +749,6 @@ document.addEventListener('DOMContentLoaded', () => {
               });
           },
           eventRender: function (event, element) {
-            console.log(event);
             let eventoAtualizado;
             data.forEach(task => {
               if (task.titulo === event.title) {
@@ -762,7 +769,6 @@ document.addEventListener('DOMContentLoaded', () => {
               element.css('background-color', 'red');
               if (eventoAtualizado.atrasada !== true) {
                 eventoAtualizado.atrasada = true;
-
 
                 fetch(`http://localhost:4567/tarefas/update`, {
                   method: 'PUT',
@@ -819,4 +825,4 @@ document.addEventListener('DOMContentLoaded', () => {
     .catch((error) => {
       console.error('Error:', error);
     });
-});
+}
