@@ -21,50 +21,52 @@ const deleteId = document.getElementById('inputDeleteId');
 
 function createTask(task) {
   fetch('http://localhost:4567/tarefas', {
-    method: 'POST', 
+    method: 'POST',
     headers: {
-        'Content-Type': 'application/json',
+      'Content-Type': 'application/json',
     },
-    body: JSON.stringify(task), 
-  })
-  .catch((error) => {
-    console.error('Error:', error);
-  });
+    body: JSON.stringify(task),
+  }) 
+    .then(() => carregaCalendario())
+    .catch((error) => {
+      console.error('Error:', error);
+      carregaCalendario();
+    });
 }
 
 function updateTask(task) {
   fetch('http://localhost:4567/tarefas/update', {
-    method: 'PUT', 
+    method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(task) 
+    body: JSON.stringify(task)
   })
-  .catch((error) => {
-    console.error('Error:', error);
-  });
+    .catch((error) => {
+      console.error('Error:', error);
+    });
 }
 
 function deleteTask(id) {
   fetch(`http://localhost:4567/tarefas/delete/${id}`)
-  .catch((error) => {
-    console.error('Error:', error);
-  });
+    .catch((error) => {
+      console.error('Error:', error);
+    });
 }
 
 function updateStatus(taskId, updatedStatus) {
-  let task; 
+  let task;
 
   fetch(`http://localhost:4567/tarefas/${taskId}`)
-  .then(response => response.json())
-  .then(data => {
-    task = data;
-    task.status = updatedStatus;
-    updateTask(task);
-  })
-  .catch((error) => {
-    console.error('Error:', error);
-  });
+    .then(response => response.json())
+    .then(data => {
+      task = data;
+      task.status = updatedStatus;
+      updateTask(task);
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
 }
 
 function formatDate(dateValue) {
@@ -291,7 +293,7 @@ function showTasksInTable() {
   fetch('http://localhost:4567/tarefas')
     .then(response => response.json())
     .then(data => {
-        showTasks(data);
+      showTasks(data);
     })
     .catch((error) => {
       console.error('Error:', error);
@@ -353,20 +355,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (btnCreateTask != null) {
     btnCreateTask.addEventListener('click', event => {
-  
+
       event.preventDefault()
-  
+
       if (!formAddTask.checkValidity()) {
-  
+
         checkInputValid(titleInput);
         checkInputValid(descriptionInput);
         checkInputValid(dateInput);
-  
+
         return;
       }
-  
+
       let status = statusEditInput.value !== '' ? returnValueById('statusEditInput') : "Pendente";
-  
+
       let task = {
         titulo: returnValueById('title'),
         usuarioID: 1,
@@ -376,13 +378,12 @@ document.addEventListener('DOMContentLoaded', () => {
         status: status,
         atrasada: moment(returnValueById('end-date')).isBefore(moment())
       };
-  
-      createTask(task);
 
+      createTask(task);
+      
       formAddTask.reset();
       $('#modalAddTask').modal('toggle');
-  
-  
+
       if (document.getElementById('lista') != null) {
         setTimeout(() => {
           showTasksInTable();
@@ -396,18 +397,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (btnEditTask != null) {
     btnEditTask.addEventListener('click', event => {
-  
+
       event.preventDefault()
-  
+
       if (!formEditTask.checkValidity()) {
-  
+
         checkInputValid(titleEditInput);
         checkInputValid(descriptionEditInput);
         checkInputValid(dateEditInput);
-  
+
         return;
       }
-  
+
       let id = parseInt(returnValueById('idEditInput'))
 
       let task = {
@@ -420,37 +421,37 @@ document.addEventListener('DOMContentLoaded', () => {
         status: returnValueById('statusEditInput'),
         atrasada: moment(returnValueById('dateEditInput')).isBefore(moment())
       }
-  
+
       updateTask(task)
-  
+
       formAddTask.reset()
       $('#modalEditTask').modal('toggle')
-  
-  
+
+
       if (document.getElementById('lista') != null) {
         setTimeout(() => {
           showTasksInTable();
         }, 2000)
       }
-  
+
       if (document.getElementById('kanban') != null) {
         $(`#task${id}`).closest('.task').remove();
         task.id = id;
         showTaskInKanban(task);
       }
-  
+
     })
   }
 
   if (btnDeleteTask != null) {
     btnDeleteTask.addEventListener('click', () => {
-  
+
       let id = parseInt(returnValueById('inputDeleteId'))
-  
+
       deleteTask(id)
-  
+
       $(`#task${id}`).closest('.task').remove();
-  
+
       $('#modalDeleteTask').modal('toggle')
 
       setTimeout(() => {
@@ -467,7 +468,7 @@ document.addEventListener('DOMContentLoaded', () => {
       handle: '.colummn-header'
     })
   }
-  
+
   if (todo !== null) {
     new Sortable(todo, {
       group: 'shared',
@@ -530,7 +531,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
-  
+
   if (doing !== null) {
     new Sortable(doing, {
       group: 'shared',
@@ -593,7 +594,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
-  
+
   if (done !== null) {
     new Sortable(done, {
       group: 'shared',
@@ -678,20 +679,25 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+  carregaCalendario();
+});
 
 
+function carregaCalendario() {
   fetch('http://localhost:4567/tarefas')
-    .then(response => response.json())
-    .then(data => {
-        data.forEach(task => {
-          showTaskInKanban(task);
-        });
-        let tarefas = data; // Armazena os dados da resposta na array de tarefas
-
+  .then(response => response.json())
+  .then(data => {
+      const calendar = document.getElementById('calendar');
+      if (calendar !== null) {
+        $('#calendar').fullCalendar('destroy');
+      }
+      data.forEach(task => {
+        showTaskInKanban(task);
+      });
 
       jQuery(function () {
         jQuery('#calendar').fullCalendar({
-
+          
           businessHours: false,
           defaultView: 'month',
           editable: true,
@@ -701,16 +707,29 @@ document.addEventListener('DOMContentLoaded', () => {
             center: 'month,agendaWeek,agendaDay',
             right: 'prev, today, next'
           },
-          events: tarefas, // Adiciona as tarefas ao calendário como eventos    
+          events: data.map(task => ({
+            title: task.titulo,
+            start: task.prazo,
+          })),
           eventDrop: function (evento, delta, revertFunc) {
-            const eventoAtualizado = {
-              start: evento.start.format(), // Atualiza a data de início da tarefa
-              end: evento.end ? evento.end.format() : null // Atualiza a data de término da tarefa, se existir
-            };
+            let eventoAtualizado;
+            data.forEach(task => {
+              if (task.titulo === evento.title) {
+                eventoAtualizado = {
+                  tarefaID: task.tarefaID,
+                  usuarioID: task.usuarioID,
+                  titulo: task.titulo,
+                  descricao: task.descricao,
+                  prioridade: task.prioridade,
+                  status: task.status,
+                  atrasada: task.atrasada,
+                  prazo: evento.start.format('YYYY-MM-DD HH:mm')
+                }
+              }
+            });
 
-
-            fetch(``, {
-              method: 'PATCH',
+            fetch('http://localhost:4567/tarefas/update', {
+              method: 'PUT',
               headers: {
                 'Content-Type': 'application/json',
               },
@@ -727,36 +746,44 @@ document.addEventListener('DOMContentLoaded', () => {
               })
               .catch(error => {
                 console.error('Erro ao atualizar a tarefa:', error);
-                revertFunc(); // Reverte a mudança se houver um erro na atualização
               });
           },
           eventRender: function (event, element) {
-
-            if (event.end && event.end.isBefore(moment())) {
+            let eventoAtualizado;
+            data.forEach(task => {
+              if (task.titulo === event.title) {
+                eventoAtualizado = {
+                  tarefaID: task.tarefaID,
+                  usuarioID: task.usuarioID,
+                  titulo: task.titulo,
+                  descricao: task.descricao,
+                  prioridade: task.prioridade,
+                  status: task.status,
+                  atrasada: task.atrasada,
+                  prazo: task.prazo
+                }
+              }
+            });
+            if (event.start && event.start.isBefore(moment())) {
 
               element.css('background-color', 'red');
-              if (event.late !== true) {
-                const eventoAtualizado = {
-                  late: true
-                };
+              if (eventoAtualizado.atrasada !== true) {
+                eventoAtualizado.atrasada = true;
 
-
-                fetch(`https://replit.com/@MateusADM/Json-Server-Web-API#data.json/${event.id}`, {
-                  method: 'PATCH',
+                fetch(`http://localhost:4567/tarefas/update`, {
+                  method: 'PUT',
                   headers: {
                     'Content-Type': 'application/json',
                   },
                   body: JSON.stringify(eventoAtualizado), // Inclui todas as informações necessárias
                 })
               }
-            } else if (event.late !== false) {
-              const eventoAtualizado = {
-                late: false
-              };
+            } else if (eventoAtualizado.atrasada !== false) {
+              eventoAtualizado.atrasada = false;
 
 
-              fetch(`https://replit.com/@MateusADM/Json-Server-Web-API#data.json/${event.id}`, {
-                method: 'PATCH',
+              fetch(`http://localhost:4567/tarefas/update`, {
+                method: 'PUT',
                 headers: {
                   'Content-Type': 'application/json',
                 },
@@ -764,7 +791,7 @@ document.addEventListener('DOMContentLoaded', () => {
               })
             }
           },
-          dayClick: function(date) {
+          dayClick: function (date) {
             formAddTask.reset();
             let formattedDate = date.format('YYYY-MM-DD  HH:mm').replace('  ', 'T');
             document.querySelector("#end-date").value = formattedDate;
@@ -798,4 +825,4 @@ document.addEventListener('DOMContentLoaded', () => {
     .catch((error) => {
       console.error('Error:', error);
     });
-});
+}
