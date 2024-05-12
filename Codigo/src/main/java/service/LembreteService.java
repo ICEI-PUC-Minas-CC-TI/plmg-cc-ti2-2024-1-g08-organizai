@@ -29,9 +29,9 @@ public class LembreteService {
 	public Object read(Request req, Response res) {
 		
 	    lembreteDAO.connect();
-		int numeroAtomico = Integer.parseInt(req.params("reminderid"));
+		int reminderid = Integer.parseInt(req.params("reminderid"));
 		
-		Lembrete lembrete = lembreteDAO.readLembrete(numeroAtomico);
+		Lembrete lembrete = lembreteDAO.readLembrete(reminderid);
 	    
 	    if (lembrete != null) {
 

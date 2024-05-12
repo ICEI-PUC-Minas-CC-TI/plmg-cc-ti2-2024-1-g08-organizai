@@ -86,8 +86,9 @@ public class TarefaDAO {
 		
 		try {
 			String sql = "SELECT titulo, descricao, prazo, prioridade, status, atrasada, taskid, userid FROM public.tarefa ORDER BY taskid ASC";
-			
 			PreparedStatement ps = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			// ps.setInt(1, userid);
+
 			ResultSet rs = ps.executeQuery();
 			
 			if(rs.next()) {

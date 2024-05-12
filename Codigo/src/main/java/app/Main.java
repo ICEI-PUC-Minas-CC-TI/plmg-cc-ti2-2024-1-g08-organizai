@@ -36,12 +36,29 @@ public class Main {
 			res.header("Access-Control-Allow-Headers", "*");
 			res.type("application/json");
 		});
+
+		get("/", (req, res) -> {
+            if (req.session().attribute("userid") != null) {
+                return "Hello, " + req.session().attribute("userid") + "!";
+            } else {
+                return "Please login.";
+            }
+        });
+
 		
-		post("/usuarios", (req,res) -> usuarioService.create(req, res));
+		post("/cadastro", (req,res) -> usuarioService.create(req, res));
 		get ("/usuarios", (req, res) -> usuarioService.readAll(req, res));
 		get ("/usuarios/:userid", (req, res) -> usuarioService.read(req, res));
 		put ("/usuarios/update", (req, res) -> usuarioService.update(req, res));
 		get ("/usuarios/delete/:userid", (req, res) -> usuarioService.delete(req, res));
+		
+		post("/login", (req,res) -> usuarioService.login(req, res));
+		
+		get("/logout", (req, res) -> {
+			req.session().invalidate();
+            
+            return null;
+        });
 
 		post("/tarefas", (req,res) -> tarefaService.create(req, res));
 		get ("/tarefas", (req, res) -> tarefaService.readAll(req, res));
