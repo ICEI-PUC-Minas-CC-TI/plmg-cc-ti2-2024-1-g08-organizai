@@ -12,8 +12,8 @@ public class ExtraiTexto {
 
     private static final Dotenv dotenv = Dotenv.configure().load();
 
-    private static final String endpoint = dotenv.get("OCR_ORGANIZAI_KEY");
-    private static final String key = dotenv.get("OCR_ORGANIZAI_ENDPOINT");
+    private static final String endpoint = dotenv.get("OCR_ORGANIZAI_ENDPOINT");
+    private static final String key = dotenv.get("OCR_ORGANIZAI_KEY");
 
     public String extrairTextoDaImagem(byte[] dadosImagem) {
         DocumentAnalysisClient cliente = new DocumentAnalysisClientBuilder()
