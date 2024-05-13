@@ -19,7 +19,7 @@ public class LembreteDAO {
 		
 		String url = "jdbc:postgresql://"+serverName+":"+port+""+"/"+ mydb;
 		String username = "gustavoarc";
-		String password = "Organizai1234";
+		String password = "0Xe40|G3I4u8";
 		boolean status = false;
 		
 		try {

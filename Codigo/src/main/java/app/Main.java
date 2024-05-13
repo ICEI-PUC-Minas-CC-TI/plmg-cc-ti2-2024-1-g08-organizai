@@ -13,7 +13,17 @@ public class Main {
 	private static LembreteService lembreteService = new LembreteService();
 	
 	public static void main(String args[]) {
+		
+		port(4567);
+		staticFiles.location("/");
 
+		// get("/pages/*", (req,res) -> {
+		// 	System.out.println("oi");
+		// 	if (req.session().attribute("userid") == null) {
+		// 		res.redirect("/login.html");
+		// 	}
+		// 	return null;
+		// });
 
 		options("/*", (req, res) -> {
             String accessControlRequestHeaders = req.headers("Access-Control-Request-Headers");
@@ -37,14 +47,14 @@ public class Main {
 			res.type("application/json");
 		});
 
-		get("/", (req, res) -> {
+		get("/teste", (req, res) -> {
+
             if (req.session().attribute("userid") != null) {
                 return "Hello, " + req.session().attribute("userid") + "!";
             } else {
                 return "Please login.";
             }
         });
-
 		
 		post("/cadastro", (req,res) -> usuarioService.create(req, res));
 		get ("/usuarios", (req, res) -> usuarioService.readAll(req, res));
@@ -53,8 +63,7 @@ public class Main {
 		get ("/usuarios/delete/:userid", (req, res) -> usuarioService.delete(req, res));
 		
 		post("/login", (req,res) -> usuarioService.login(req, res));
-		
-		get("/logout", (req, res) -> {
+		get("/logout", (req, res) -> { 
 			req.session().invalidate();
             
             return null;

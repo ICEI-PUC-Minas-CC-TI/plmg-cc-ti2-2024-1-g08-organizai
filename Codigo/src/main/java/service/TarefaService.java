@@ -18,6 +18,9 @@ public class TarefaService {
 		tarefaDAO.connect();
 	    
 	    tarefa = gson.fromJson(req.body(), Tarefa.class);
+		int userid = req.session().attribute("userid");
+
+		tarefa.setUsuarioID(userid);
 	    tarefaDAO.createTarefa(tarefa);
 	    
 	    res.status(201);
@@ -48,13 +51,10 @@ public class TarefaService {
 	
 	public Object readAll(Request req, Response res) {
 
-		// int userid = req.session().attribute("userid");
+		int userid = req.session().attribute("userid");
 		tarefaDAO.connect();
 
-		// System.out.println(userid);
-		
-		// Tarefa[] tarefas = tarefaDAO.readTarefas(userid);
-		Tarefa[] tarefas = tarefaDAO.readTarefas();
+		Tarefa[] tarefas = tarefaDAO.readTarefas(userid);
 		
 		res.status(200);
 		res.type("application/json");

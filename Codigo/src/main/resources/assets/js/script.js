@@ -371,7 +371,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       let task = {
         titulo: returnValueById('title'),
-        usuarioID: 1,
+        usuarioID: 0,
         descricao: returnValueById('description').replace(/(\r\n|\n|\r)/gm, ""),
         prazo: returnValueById('end-date'),
         prioridade: returnValueById('priority'),

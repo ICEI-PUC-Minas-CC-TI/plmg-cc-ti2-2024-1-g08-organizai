@@ -27,7 +27,7 @@ public class UsuarioService {
 		}
 		else
 		{
-			res.redirect("http://localhost:5500/Codigo/src/main/resources/pages/cadastro.html#error");
+			res.redirect("/pages/cadastro.html#error");
 		}
 
 	    res.status(201);
@@ -105,11 +105,11 @@ public class UsuarioService {
 		if(usuarioDAO.login(usuario) != null)
 		{
 			req.session().attribute("userid", usuarioDAO.login(usuario).getUsuarioID());
-			res.redirect("http://localhost:5500/Codigo/src/main/resources/index.html");
+			res.redirect("/pages/home.html");
 		}
 		else
 		{
-			res.redirect("http://localhost:5500/Codigo/src/main/resources/pages/login.html#notfound");
+			res.redirect("/pages/login.html#notfound");
 		}
 
 		return null;

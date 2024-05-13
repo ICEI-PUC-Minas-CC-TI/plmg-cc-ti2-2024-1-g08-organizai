@@ -19,7 +19,7 @@ public class TarefaDAO {
 		
 		String url = "jdbc:postgresql://"+serverName+":"+port+""+"/"+ mydb;
 		String username = "gustavoarc";
-		String password = "Organizai1234";
+		String password = "0Xe40|G3I4u8";
 		boolean status = false;
 		
 		try {
@@ -80,14 +80,14 @@ public class TarefaDAO {
 		return status;
 	}
 
-	public Tarefa[] readTarefas() {
+	public Tarefa[] readTarefas(int userid) {
 		
 		Tarefa[] tarefas = null;
 		
 		try {
-			String sql = "SELECT titulo, descricao, prazo, prioridade, status, atrasada, taskid, userid FROM public.tarefa ORDER BY taskid ASC";
+			String sql = "SELECT titulo, descricao, prazo, prioridade, status, atrasada, taskid, userid FROM public.tarefa WHERE userid = ? ORDER BY taskid ASC";
 			PreparedStatement ps = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-			// ps.setInt(1, userid);
+			ps.setInt(1, userid);
 
 			ResultSet rs = ps.executeQuery();
 			
