@@ -124,6 +124,14 @@ function toggleLoadingTasks() {
   }
 }
 
+function toggleLoadingTasksInTable() {
+  if ($("#loadingTasksTable").css("display") !== "none") {
+    $("#loadingTasksTable").css("display", "none");
+  } else {
+    $("#loadingTasksTable").css("display", "flex");
+  }
+}
+
 function formatDate(dateValue) {
   let date = new Date(dateValue);
   let month, day, hours, minutes, seconds;
@@ -348,6 +356,7 @@ function showTasksInTable() {
   fetch('http://localhost:4567/tarefas')
     .then(response => response.json())
     .then(data => {
+      toggleLoadingTasksInTable();
       showTasks(data);
     })
     .catch((error) => {
