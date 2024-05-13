@@ -234,3 +234,31 @@ body {
   margin-top: 10px;
   width: 100%;
 }
+
+#btnGenerateTaskContainer {
+  display: flex;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+#fileInput {
+  width: 96%;
+  margin-left: 2%;
+}
+
+#labelGenerateTask {
+  padding-left: 1.8%;
+  font-weight: bold;
+}
+
+#infoGenerate {
+  color: rgba(255, 255, 255, 0.692) !important;
+  padding-left: 4%;
+}
+
+#loadingFormAddTask {
+  display: none;
+  margin: 32%;
+}
