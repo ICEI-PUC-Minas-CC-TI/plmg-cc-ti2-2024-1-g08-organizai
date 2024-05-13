@@ -1,11 +1,13 @@
 package dao;
 
 import java.sql.*;
-import de.mkammerer.argon2.Argon2;
-import de.mkammerer.argon2.Argon2Factory;
+
+import io.github.cdimascio.dotenv.Dotenv;
 import model.Usuario;
 
 public class UsuarioDAO {
+
+	private static final Dotenv dotenv = Dotenv.configure().load();
 	
 	private Connection conn;
 	private Argon2 argon2 = Argon2Factory.create();
@@ -16,16 +18,15 @@ public class UsuarioDAO {
 	
 	public boolean connect() {
 		
-		String driverName = "org.postgresql.Driver";
-		String serverName = "ti2gustavo.postgres.database.azure.com";
-		String mydb = "postgres";
-		int port = 5432;
-		
-		String url = "jdbc:postgresql://"+serverName+":"+port+""+"/"+ mydb;
-		String username = "gustavoarc";
-		String password = "0Xe40|G3I4u8";
+		String driverName = dotenv.get("DRIVER_NAME");
+        String serverName = dotenv.get("SERVER_NAME");
+        String mydb = dotenv.get("MYDB");
+        int port = Integer.parseInt(dotenv.get("PORT"));
 
-		boolean status = false;
+        String url = "jdbc:postgresql://" + serverName + ":" + port + "/" + mydb;
+        String username = dotenv.get("USER");
+        String password = dotenv.get("PASSWORD");
+        boolean status = false;
 		
 		try {
 			Class.forName(driverName);

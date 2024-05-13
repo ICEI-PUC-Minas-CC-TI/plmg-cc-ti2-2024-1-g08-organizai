@@ -18,6 +18,8 @@ const priorityEditInput = document.getElementById('priorityEditInput');
 const statusEditInput = document.getElementById('statusEditInput');
 const lateEditInput = document.getElementById('lateEditInput');
 const deleteId = document.getElementById('inputDeleteId');
+const fileInput = document.getElementById('fileInput');
+const btnGenerateTask = document.getElementById('btnGenerateTask');
 
 function createTask(task) {
   fetch('http://localhost:4567/tarefas', {
@@ -67,6 +69,67 @@ function updateStatus(taskId, updatedStatus) {
     .catch((error) => {
       console.error('Error:', error);
     });
+}
+
+function generateTask() {
+  toggleLoadingModalAddTask();
+  let file = fileInput.files[0];
+  let formData = new FormData();
+  formData.append('file', file, file.name);
+
+  var reader = new FileReader();
+  reader.readAsArrayBuffer(file);
+
+  reader.onload = function (event) {
+    fetch(`http://localhost:4567/gerarTarefa`, {
+      method: 'POST',
+      body: event.target.result,
+    })
+      .then(response => response.json())
+      .then(data => {
+        showSuggestion(data);
+        toggleLoadingModalAddTask();
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        toggleLoadingModalAddTask();
+      });
+  }
+}
+
+function showSuggestion(data) {
+  titleInput.value = data.title;
+  descriptionInput.value = data.description;
+  dateInput.value = data.deadline;
+}
+
+function toggleLoadingModalAddTask() {
+  if (formAddTask.style.display === 'none') {
+    formAddTask.style.display = 'block';
+    btnGenerateTask.disabled = false;
+    document.getElementById('loadingFormAddTask').style.display = 'none';
+  } else {
+    formAddTask.style.display = 'none';
+    btnGenerateTask.disabled = true;
+    document.getElementById('loadingFormAddTask').style.display = 'block';
+  }
+}
+
+function toggleLoadingTasks() {
+  var firstLoadingKanban = $(".loadingTasks").first();
+  if (firstLoadingKanban.css("display") !== "none") {
+    $(".loadingTasks").css("display", "none");
+  } else {
+    $(".loadingTasks").css("display", "flex");
+  }
+}
+
+function toggleLoadingTasksInTable() {
+  if ($("#loadingTasksTable").css("display") !== "none") {
+    $("#loadingTasksTable").css("display", "none");
+  } else {
+    $("#loadingTasksTable").css("display", "flex");
+  }
 }
 
 function formatDate(dateValue) {
@@ -293,6 +356,7 @@ function showTasksInTable() {
   fetch('http://localhost:4567/tarefas')
     .then(response => response.json())
     .then(data => {
+      toggleLoadingTasksInTable();
       showTasks(data);
     })
     .catch((error) => {
@@ -687,10 +751,12 @@ function carregaCalendario() {
   fetch('http://localhost:4567/tarefas')
   .then(response => response.json())
   .then(data => {
+      toggleLoadingTasks();
       const calendar = document.getElementById('calendar');
       if (calendar !== null) {
         $('#calendar').fullCalendar('destroy');
       }
+      
       data.forEach(task => {
         showTaskInKanban(task);
       });

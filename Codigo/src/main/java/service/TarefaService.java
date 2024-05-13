@@ -25,7 +25,7 @@ public class TarefaService {
 	    
 	    res.status(201);
 
-	    return null;
+		return "Tarefa criada com sucesso";
 	}
 	
 	
@@ -70,7 +70,7 @@ public class TarefaService {
 		tarefaDAO.updateTarefa(tarefa);
 		
 	    res.status(200);
-		return null;
+		return "Tarefa atualizada com sucesso";
 	}
 
 	
