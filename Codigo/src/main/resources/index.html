@@ -91,6 +91,14 @@
                         style="color: #fff;"></button>
                 </div>
                 <div class="modal-body">
+                    <div class="mb-1">
+                        <label id="labelGenerateTask" for="formFile" class="ml-3 form-label">Criar tarefa por meio de imagem</label>
+                        <input id="fileInput" class="form-control" type="file" id="formFile" accept="image/*,.pdf">
+                        <small id="infoGenerate" class="form-text text-muted">Envie uma imagem e crie sua tarefa mais rápido! Opicional.</small>
+                        <div id="btnGenerateTaskContainer">
+                            <button onclick="generateTask()" type="button" id="btnGenerateTask" class="btn btn-secondary mt-3">Gerar tarefa</button>
+                        </div>
+                    </div>
                     <form action="" id="formAddTask" method="POST">
                         <div class="row">
                             <section class="col sectionInput">
@@ -127,6 +135,12 @@
                             </section>
                         </div>
                     </form>
+                    <div id="loadingFormAddTask">
+                        <div class="d-flex justify-content-center">
+                            <div class="spinner-border" role="status">
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" id="btnCreateTask" class="btn btn-secondary">Adicionar</button>
