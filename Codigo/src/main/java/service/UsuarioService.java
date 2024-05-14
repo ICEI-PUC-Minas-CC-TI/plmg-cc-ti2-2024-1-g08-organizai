@@ -105,7 +105,7 @@ public class UsuarioService {
 		if(usuarioDAO.login(usuario) != null)
 		{
 			req.session().attribute("userid", usuarioDAO.login(usuario).getUsuarioID());
-			res.redirect("/pages/home.html");
+			res.redirect("/index.html");
 		}
 		else
 		{

@@ -14,16 +14,8 @@ public class Main {
 	
 	public static void main(String args[]) {
 		
-		port(4567);
+		// port(4567);
 		staticFiles.location("/");
-
-		// get("/pages/*", (req,res) -> {
-		// 	System.out.println("oi");
-		// 	if (req.session().attribute("userid") == null) {
-		// 		res.redirect("/login.html");
-		// 	}
-		// 	return null;
-		// });
 
 		options("/*", (req, res) -> {
             String accessControlRequestHeaders = req.headers("Access-Control-Request-Headers");

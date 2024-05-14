@@ -77,13 +77,15 @@ public class LembreteDAO {
 		return status;
 	}
 
-	public Lembrete[] readLembretes() {
+	public Lembrete[] readLembretes(int userid) {
 		
 		Lembrete[] lembretes = null;
 		
 		try {
-			String sql = "SELECT nome, conteudo, reminderid, userid FROM public.lembrete ORDER BY reminderid ASC";
+			String sql = "SELECT nome, conteudo, reminderid, userid FROM public.lembrete WHERE userid = ? ORDER BY reminderid ASC";
 			PreparedStatement ps = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			ps.setInt(1, userid);
+			
 			ResultSet rs = ps.executeQuery();
 			
 			if(rs.next()) {
