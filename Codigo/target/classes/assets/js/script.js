@@ -755,15 +755,15 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
-  carregaCalendario();
+  carregaCalendario(true);
 });
 
 
-function carregaCalendario() {
+function carregaCalendario(loading = false) {
   fetch('http://localhost:4567/tarefas')
   .then(response => response.json())
   .then(data => {
-      toggleLoadingTasks();
+      loading && toggleLoadingTasks();
       const calendar = document.getElementById('calendar');
       if (calendar !== null) {
         $('#calendar').fullCalendar('destroy');
