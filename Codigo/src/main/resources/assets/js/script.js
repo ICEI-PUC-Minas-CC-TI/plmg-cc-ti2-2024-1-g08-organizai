@@ -115,6 +115,14 @@ function toggleLoadingModalAddTask() {
   }
 }
 
+fileInput.addEventListener('change', () => {
+  if (fileInput.files.length > 0) {
+    btnGenerateTask.disabled = false;
+  } else {
+    btnGenerateTask.disabled = true;
+  }
+});
+
 function toggleLoadingTasks() {
   var firstLoadingKanban = $(".loadingTasks").first();
   if (firstLoadingKanban.css("display") !== "none") {
