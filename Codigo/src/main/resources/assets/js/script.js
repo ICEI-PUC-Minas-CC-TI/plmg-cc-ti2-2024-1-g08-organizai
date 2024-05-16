@@ -123,6 +123,23 @@ fileInput.addEventListener('change', () => {
   }
 });
 
+function toggleLoadingTasks() {
+  var firstLoadingKanban = $(".loadingTasks").first();
+  if (firstLoadingKanban.css("display") !== "none") {
+    $(".loadingTasks").css("display", "none");
+  } else {
+    $(".loadingTasks").css("display", "flex");
+  }
+}
+
+function toggleLoadingTasksInTable() {
+  if ($("#loadingTasksTable").css("display") !== "none") {
+    $("#loadingTasksTable").css("display", "none");
+  } else {
+    $("#loadingTasksTable").css("display", "flex");
+  }
+}
+
 function formatDate(dateValue) {
   let date = new Date(dateValue);
   let month, day, hours, minutes, seconds;
@@ -347,6 +364,7 @@ function showTasksInTable() {
   fetch('http://localhost:4567/tarefas')
     .then(response => response.json())
     .then(data => {
+      toggleLoadingTasksInTable();
       showTasks(data);
     })
     .catch((error) => {
@@ -741,10 +759,12 @@ function carregaCalendario() {
   fetch('http://localhost:4567/tarefas')
   .then(response => response.json())
   .then(data => {
+      toggleLoadingTasks();
       const calendar = document.getElementById('calendar');
       if (calendar !== null) {
         $('#calendar').fullCalendar('destroy');
       }
+      
       data.forEach(task => {
         showTaskInKanban(task);
       });

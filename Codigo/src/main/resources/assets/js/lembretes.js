@@ -19,6 +19,14 @@ const contentEditInput = document.getElementById('inputEditContent')
 //campo form deletar
 const deleteId = document.getElementById('inputDeleteId')
 
+function toggleLoadingRemindersInTable() {
+    if ($('#loadingRemindersTable').css("display") !== "none") {
+        $("#loadingRemindersTable").css("display", "none")
+    } else {
+        $("#loadingRemindersTable").css("display", "flex")
+    }
+}
+
 //chamar funcao de criar lembrete ao clicar no botao
 btnCreateReminder.addEventListener('click', event => {
 
@@ -186,6 +194,7 @@ function readReminders() {
     fetch('http://localhost:4567/lembretes')
     .then(response => response.json())
     .then(data => {
+        toggleLoadingRemindersInTable();
         showReminders(data);
     })
     .catch((error) => {
