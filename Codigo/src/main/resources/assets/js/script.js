@@ -177,12 +177,6 @@ function formatDate(dateValue) {
   return `${day}/${month}/${date.getFullYear()} ${hours}:${minutes}:${seconds}`;
 }
 
-function formatStatus(status) {
-  if (status == "Pendente") return 'To-Do'
-  else if (status == "Em Progresso") return 'Doing'
-  else if (status == "Concluída") return 'Done'
-}
-
 function showReminderModal(){
   $('#modalReminderTab').modal('show');
   fetch('http://localhost:4567/lembretes')
@@ -366,7 +360,7 @@ function showTasks(tarefas) {
         <td>${task.descricao}</td> 
         <td>${formatDate(task.prazo)}</td> 
         <td>${formatPriority(task.prioridade)}</td> 
-        <td>${formatStatus(task.status)}</td>
+        <td>${task.status}</td>
         <td class="text-center"><i class="bi bi-pencil" title="Editar" 
         onclick="showTask(${task.tarefaID}, '${task.titulo}', '${task.descricao}','${task.prazo}','${task.prioridade}', '${task.status}', '${task.atrasada}')">
         </i></td> 
