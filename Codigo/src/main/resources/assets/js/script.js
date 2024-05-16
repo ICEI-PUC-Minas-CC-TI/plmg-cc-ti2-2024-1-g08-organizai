@@ -183,6 +183,20 @@ function formatStatus(status) {
   else if (status == "Concluída") return 'Done'
 }
 
+function showReminderModal(){
+  $('#modalReminderTab').modal('show');
+  fetch('http://localhost:4567/lembretes')
+  .then(dados => dados.json())
+  .then(dados =>{
+    const body = document.getElementById('modal-reminders');
+    body.innerHTML = ""
+    dados.forEach(element => {
+      body.innerHTML +=
+      `<li>${element.conteudo}</li>`
+    });
+  })
+}
+
 function formatPriority(priority) {
   if (priority == 'Alta') return 'ALTA';
   else if (priority == 'Média') return 'MÉDIA';
@@ -210,6 +224,8 @@ function addButtonListener(btn, status) {
       taskContainer.remove();
       doing.insertBefore(taskContainer, doing.firstChild);
       addCheckButtonListener();
+      //chamo funcao do modal de lembretes
+      showReminderModal();
     } else if (status === "Concluída") {
       const taskBody = taskContainer.querySelector('.task-body');
       taskBody.classList.remove('border-danger-subtle', 'border-warning-subtle', 'border-success-subtle', 'border-start', 'rounded-start-2', 'border-5');
@@ -586,6 +602,8 @@ document.addEventListener('DOMContentLoaded', () => {
           let modifiedOnclick = taskArray.join(',');
           btnEditar.setAttribute('onclick', modifiedOnclick);
           updateStatus(taskId, "Em Progresso");
+          //chamo funcao do modal de lembretes
+          showReminderModal();
         }
         if (evt.to === done) {
           const droppedTask = evt.item;
