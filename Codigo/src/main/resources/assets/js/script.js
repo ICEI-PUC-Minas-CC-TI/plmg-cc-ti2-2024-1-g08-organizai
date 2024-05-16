@@ -11,6 +11,7 @@ const descriptionInput = document.getElementById('description');
 const dateInput = document.getElementById('end-date');
 const priorityInput = document.getElementById('priority');
 const idEditInput = document.getElementById('idEditInput');
+const userIdEditInput = document.getElementById('userIdEditInput');
 const titleEditInput = document.getElementById('titleEditInput');
 const descriptionEditInput = document.getElementById('descriptionEditInput');
 const dateEditInput = document.getElementById('dateEditInput');
@@ -295,7 +296,7 @@ function showTaskInKanban(task) {
     contentTodo = `<div class="card task">
       <div class="card-body task-body ${priorityClass}">
       <button type="button" class="btn btn-sm float-end m-1 rounded-circle" onclick="deleteConfirm(${task.tarefaID})"><i class="bi bi-trash" title="Excluir"></i></button>
-      <button type="button" class="btn btn-sm float-end m-1 rounded-circle btn-editar" onclick="showTask(${task.tarefaID}, '${task.titulo}', '${task.descricao}','${task.prazo}','${task.prioridade}', '${task.status}', '${task.atrasada}')"><i class="bi bi-pencil" title="Editar"></i></button>
+      <button type="button" class="btn btn-sm float-end m-1 rounded-circle btn-editar" onclick="showTask(${task.tarefaID}, ${task.usuarioID}, '${task.titulo}', '${task.descricao}','${task.prazo}','${task.prioridade}', '${task.status}', '${task.atrasada}')"><i class="bi bi-pencil" title="Editar"></i></button>
       <span class="id d-none" id="task${task.tarefaID}">${task.tarefaID}</span>
       <h5 class="card-title">${task.titulo}</h5>
         <p class="card-text">${task.descricao}</p>
@@ -310,7 +311,7 @@ function showTaskInKanban(task) {
     contentDoing = `<div class="card task">
       <div class="card-body task-body ${priorityClass}">
       <button type="button" class="btn btn-sm float-end m-1 rounded-circle" onclick="deleteConfirm(${task.tarefaID})"><i class="bi bi-trash" title="Excluir"></i></button>
-      <button type="button" class="btn btn-sm float-end m-1 rounded-circle btn-editar" onclick="showTask(${task.tarefaID}, '${task.titulo}', '${task.descricao}','${task.prazo}','${task.prioridade}', '${task.status}', '${task.atrasada}')"><i class="bi bi-pencil" title="Editar"></i></button>
+      <button type="button" class="btn btn-sm float-end m-1 rounded-circle btn-editar" onclick="showTask(${task.tarefaID}, ${task.usuarioID}, '${task.titulo}', '${task.descricao}','${task.prazo}','${task.prioridade}', '${task.status}', '${task.atrasada}')"><i class="bi bi-pencil" title="Editar"></i></button>
       <span class="id d-none" id="task${task.tarefaID}">${task.tarefaID}</span>
       <h5 class="card-title">${task.titulo}</h5>
         <p class="card-text">${task.descricao}</p>
@@ -325,7 +326,7 @@ function showTaskInKanban(task) {
     contentDone = `<div class="card task">
         <div class="card-body task-body border-5 border-start border-success rounded-start-2">
           <button type="button" class="btn btn-sm float-end m-1 rounded-circle" onclick="deleteConfirm(${task.tarefaID})"><i class="bi bi-trash" title="Excluir"></i></button>
-          <button type="button" class="btn btn-sm float-end m-1 rounded-circle btn-editar" onclick="showTask(${task.tarefaID}, '${task.titulo}', '${task.descricao}','${task.prazo}','${task.prioridade}', '${task.status}', '${task.atrasada}')"><i class="bi bi-pencil" title="Editar"></i></button>
+          <button type="button" class="btn btn-sm float-end m-1 rounded-circle btn-editar" onclick="showTask(${task.tarefaID}, ${task.usuarioID}, '${task.titulo}', '${task.descricao}','${task.prazo}','${task.prioridade}', '${task.status}', '${task.atrasada}')"><i class="bi bi-pencil" title="Editar"></i></button>
           <span class="id d-none" id="task${task.tarefaID}">${task.tarefaID}</span>
           <h5 class="card-title">${task.titulo}</h5>
           <p class="card-text">${task.descricao}</p>
@@ -388,9 +389,10 @@ function showTasksInTable() {
     });
 }
 
-function showTask(id, title, description, start, priority, status, late) {
+function showTask(id, userid, title, description, start, priority, status, late) {
 
   idEditInput.value = id
+  userIdEditInput.value = userid
   titleEditInput.value = title
   descriptionEditInput.value = description
   dateEditInput.value = start
@@ -459,7 +461,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       let task = {
         titulo: returnValueById('title'),
-        usuarioID: 0,
+        usuarioID: returnValueById('userIdEditInput'),
         descricao: returnValueById('description').replace(/(\r\n|\n|\r)/gm, ""),
         prazo: returnValueById('end-date'),
         prioridade: returnValueById('priority'),
@@ -499,7 +501,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       let task = {
         tarefaID: id,
-        usuarioID: 1,
+        usuarioID: returnValueById('userIdEditInput'),
         titulo: returnValueById('titleEditInput'),
         descricao: returnValueById('descriptionEditInput').replace(/(\r\n|\n|\r)/gm, ""),
         prazo: returnValueById('dateEditInput'),
