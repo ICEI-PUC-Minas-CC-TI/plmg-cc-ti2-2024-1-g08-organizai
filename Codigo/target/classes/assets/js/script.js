@@ -29,10 +29,10 @@ function createTask(task) {
     },
     body: JSON.stringify(task),
   }) 
-    .then(() => carregaCalendario())
+    .then(() => carregaCalendario(false))
     .catch((error) => {
       console.error('Error:', error);
-      carregaCalendario();
+      carregaCalendario(false);
     });
 }
 
@@ -759,11 +759,11 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-function carregaCalendario() {
+function carregaCalendario(loading = true) {
   fetch('http://localhost:4567/tarefas')
   .then(response => response.json())
   .then(data => {
-      toggleLoadingTasks();
+      loading && toggleLoadingTasks();
       const calendar = document.getElementById('calendar');
       if (calendar !== null) {
         $('#calendar').fullCalendar('destroy');
