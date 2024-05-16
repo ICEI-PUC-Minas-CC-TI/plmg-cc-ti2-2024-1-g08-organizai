@@ -462,8 +462,6 @@ document.addEventListener('DOMContentLoaded', () => {
           window.scrollTo(0, document.body.scrollHeight)
         }, 2000)
       }
-
-      showTaskInKanban(task);
     })
   }
 
