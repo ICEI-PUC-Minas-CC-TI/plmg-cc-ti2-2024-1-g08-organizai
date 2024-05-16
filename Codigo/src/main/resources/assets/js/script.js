@@ -29,10 +29,10 @@ function createTask(task) {
     },
     body: JSON.stringify(task),
   }) 
-    .then(() => carregaCalendario(false))
+    .then(() => carregaCalendario())
     .catch((error) => {
       console.error('Error:', error);
-      carregaCalendario(false);
+      carregaCalendario();
     });
 }
 
@@ -755,11 +755,11 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
-  carregaCalendario();
+  carregaCalendario(true);
 });
 
 
-function carregaCalendario(loading = true) {
+function carregaCalendario(loading = false) {
   fetch('http://localhost:4567/tarefas')
   .then(response => response.json())
   .then(data => {
