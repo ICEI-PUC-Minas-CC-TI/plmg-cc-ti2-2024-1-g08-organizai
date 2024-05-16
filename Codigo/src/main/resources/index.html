@@ -41,7 +41,14 @@
     <div class="p-5">
         <div class="card">
             <div class="card-body p-0">
-                <div id="calendar" class="fc-dark-theme"></div>
+                <div id="calendar" class="fc-dark-theme">
+                    <div class="loadingTasks">
+                        <div class="d-flex justify-content-center">
+                            <div class="spinner-border" role="status">
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -56,7 +63,12 @@
                     <button id="" type="button" class="btn btn-sm float-end" data-bs-toggle="modal" data-bs-target="#modalAddTask" onclick="document.getElementById('statusEditInput').value = 'Pendente'"><i class="bi bi-plus"></i></button>
                 </div>
                 <div class="card-body status" id="to-do">
-
+                    <div class="loadingTasks">
+                        <div class="d-flex justify-content-center">
+                            <div class="spinner-border" role="status">
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="col-md-4 coluna-kanban card">
@@ -66,7 +78,12 @@
                     <button id="" type="button" class="btn btn-sm float-end" data-bs-toggle="modal" data-bs-target="#modalAddTask" onclick="document.getElementById('statusEditInput').value = 'Em Progresso'"><i class="bi bi-plus"></i></button>
                 </div>
                 <div class="card-body status doing" id="doing">
-
+                    <div class="loadingTasks">
+                        <div class="d-flex justify-content-center">
+                            <div class="spinner-border" role="status">
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="col-md-4 coluna-kanban card">
@@ -76,7 +93,12 @@
                     <button id="" type="button" class="btn btn-sm float-end" data-bs-toggle="modal" data-bs-target="#modalAddTask" onclick="document.getElementById('statusEditInput').value = 'Concluída'"><i class="bi bi-plus"></i></button>
                 </div>
                 <div class="card-body status" id="done">
-                    
+                    <div class="loadingTasks">
+                        <div class="d-flex justify-content-center">
+                            <div class="spinner-border" role="status">
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -91,6 +113,14 @@
                         style="color: #fff;"></button>
                 </div>
                 <div class="modal-body">
+                    <div class="mb-1">
+                        <label id="labelGenerateTask" for="formFile" class="ml-3 form-label">Criar tarefa por meio de imagem</label>
+                        <input id="fileInput" class="form-control" type="file" id="formFile" accept="image/*,.pdf">
+                        <small id="infoGenerate" class="form-text text-muted">Envie uma imagem e crie sua tarefa mais rápido! Opcional.</small>
+                        <div id="btnGenerateTaskContainer">
+                            <button onclick="generateTask()" type="button" id="btnGenerateTask" disabled="true" class="btn btn-secondary mt-3">Gerar tarefa</button>
+                        </div>
+                    </div>
                     <form action="" id="formAddTask" method="POST">
                         <div class="row">
                             <section class="col sectionInput">
@@ -127,6 +157,12 @@
                             </section>
                         </div>
                     </form>
+                    <div id="loadingFormAddTask">
+                        <div class="d-flex justify-content-center">
+                            <div class="spinner-border" role="status">
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" id="btnCreateTask" class="btn btn-secondary">Adicionar</button>

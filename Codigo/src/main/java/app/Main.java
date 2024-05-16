@@ -5,12 +5,14 @@ import static spark.Spark.*;
 import service.LembreteService;
 import service.TarefaService;
 import service.UsuarioService;
+import service.GerarTarefaService;
 
 public class Main {
 	
 	private static UsuarioService usuarioService = new UsuarioService();
 	private static TarefaService tarefaService = new TarefaService();
 	private static LembreteService lembreteService = new LembreteService();
+	private static GerarTarefaService gerarTarefaService = new GerarTarefaService();
 	
 	public static void main(String args[]) {
 		
@@ -72,5 +74,7 @@ public class Main {
 		get ("/lembretes/:reminderid", (req, res) -> lembreteService.read(req, res));
 		put ("/lembretes/update", (req, res) -> lembreteService.update(req, res));
 		get ("/lembretes/delete/:reminderid", (req, res) -> lembreteService.delete(req, res));
+
+		post("/gerarTarefa", (req,res) -> gerarTarefaService.generate(req, res));
 	}
 }

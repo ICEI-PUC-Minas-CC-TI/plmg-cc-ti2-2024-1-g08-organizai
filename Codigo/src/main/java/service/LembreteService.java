@@ -25,7 +25,7 @@ public class LembreteService {
 	    
 	    res.status(201);
 
-	    return null;
+		return "Lembrete criado com sucesso";
 	}
 	
 	
@@ -70,7 +70,7 @@ public class LembreteService {
 		lembreteDAO.updateLembrete(lembrete);
 		
 	    res.status(200);
-		return null;
+		return "Lembrete atualizado com sucesso";
 	}
 
 	
