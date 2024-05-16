@@ -18,6 +18,9 @@ public class TarefaService {
 		tarefaDAO.connect();
 	    
 	    tarefa = gson.fromJson(req.body(), Tarefa.class);
+		int userid = req.session().attribute("userid");
+
+		tarefa.setUsuarioID(userid);
 	    tarefaDAO.createTarefa(tarefa);
 	    
 	    res.status(201);
@@ -29,9 +32,9 @@ public class TarefaService {
 	public Object read(Request req, Response res) {
 		
 	    tarefaDAO.connect();
-		int numeroAtomico = Integer.parseInt(req.params("taskid"));
+		int taskid = Integer.parseInt(req.params("taskid"));
 		
-		Tarefa tarefa = tarefaDAO.readTarefa(numeroAtomico);
+		Tarefa tarefa = tarefaDAO.readTarefa(taskid);
 	    
 	    if (tarefa != null) {
 
@@ -47,13 +50,15 @@ public class TarefaService {
 
 	
 	public Object readAll(Request req, Response res) {
+
+		int userid = req.session().attribute("userid");
+		tarefaDAO.connect();
+
+		Tarefa[] tarefas = tarefaDAO.readTarefas(userid);
 		
-	    tarefaDAO.connect();
-	    Tarefa[] tarefas = tarefaDAO.readTarefas();
-	    
-	    res.status(200);
-	    res.type("application/json");
-	    return gson.toJson(tarefas);
+		res.status(200);
+		res.type("application/json");
+		return gson.toJson(tarefas);
 	}
 
 	

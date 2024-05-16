@@ -5,7 +5,6 @@ import model.Usuario;
 import spark.Request;
 import spark.Response;
 import com.google.gson.Gson;
-// import spark.Spark.*;
 
 public class UsuarioService {
 
@@ -17,21 +16,31 @@ public class UsuarioService {
 		
 		usuarioDAO.connect();
 	    
-	    usuario = gson.fromJson(req.body(), Usuario.class);
-	    usuarioDAO.createUsuario(usuario);
-	    
+		usuario = new Usuario();
+		usuario.setNome(req.queryParams("nome"));
+		usuario.setEmail(req.queryParams("email"));
+		usuario.setSenha(req.queryParams("senha"));
+
+		if(usuarioDAO.createUsuario(usuario))
+		{
+			login(req, res);
+		}
+		else
+		{
+			res.redirect("/pages/cadastro.html#error");
+		}
+
 	    res.status(201);
 
 	    return null;
 	}
 	
-	
 	public Object read(Request req, Response res) {
 		
 	    usuarioDAO.connect();
-		int numeroAtomico = Integer.parseInt(req.params("userid"));
+		int userid = Integer.parseInt(req.params("userid"));
 		
-		Usuario usuario = usuarioDAO.readUsuario(numeroAtomico);
+		Usuario usuario = usuarioDAO.readUsuario(userid);
 	    
 	    if (usuario != null) {
 
@@ -85,4 +94,24 @@ public class UsuarioService {
 	    }
 	}
 
+	public Object login(Request req, Response res) {
+
+		usuarioDAO.connect();
+
+		usuario = new Usuario();
+		usuario.setEmail(req.queryParams("email"));
+		usuario.setSenha(req.queryParams("senha"));
+
+		if(usuarioDAO.login(usuario) != null)
+		{
+			req.session().attribute("userid", usuarioDAO.login(usuario).getUsuarioID());
+			res.redirect("/pages/home.html");
+		}
+		else
+		{
+			res.redirect("/pages/index.html#notfound");
+		}
+
+		return null;
+	}
 }

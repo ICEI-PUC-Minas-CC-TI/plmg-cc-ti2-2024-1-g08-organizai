@@ -3,6 +3,8 @@ package dao;
 import java.sql.*;
 
 import io.github.cdimascio.dotenv.Dotenv;
+import de.mkammerer.argon2.Argon2;
+import de.mkammerer.argon2.Argon2Factory;
 import model.Usuario;
 
 public class UsuarioDAO {
@@ -10,6 +12,7 @@ public class UsuarioDAO {
 	private static final Dotenv dotenv = Dotenv.configure().load();
 	
 	private Connection conn;
+	private Argon2 argon2 = Argon2Factory.create();
 	
 	public UsuarioDAO() {
 		conn = null;
@@ -64,7 +67,7 @@ public class UsuarioDAO {
 		try {
 			PreparedStatement ps = conn.prepareStatement("INSERT INTO public.usuario(email, senhahash, nome) VALUES (?, ?, ?)");
 			ps.setString(1, usuario.getEmail());
-			ps.setString(2, usuario.getSenha());
+			ps.setString(2, argon2.hash(10, 65536, 1, usuario.getSenha()));
 			ps.setString(3, usuario.getNome());
 			
 			int rowsInserted = ps.executeUpdate();
@@ -183,5 +186,34 @@ public class UsuarioDAO {
 		}
 		
 		return status;
+	}
+
+	public Usuario login(Usuario usuarioLogin) {
+
+		Usuario usuario = null;
+		
+		try {
+			PreparedStatement ps = conn.prepareStatement("SELECT userid, nome, email, senhahash FROM public.usuario WHERE email = ?");
+			ps.setString(1, usuarioLogin.getEmail());
+			ResultSet rs = ps.executeQuery();
+			
+			if(rs.next()) {
+				// if(usuarioLogin.getSenha().equals(rs.getString("senhahash")))
+				if(argon2.verify(rs.getString("senhahash"), usuarioLogin.getSenha()))
+				{
+					usuario = new Usuario(rs.getInt("userid"),
+					rs.getString("nome"), 
+					rs.getString("email"), 
+					rs.getString("senhahash"));
+				}
+			}
+			
+			ps.close();
+			
+		}catch(SQLException e){
+			System.err.println(e.getMessage());
+		}
+		
+		return usuario;
 	}
 }

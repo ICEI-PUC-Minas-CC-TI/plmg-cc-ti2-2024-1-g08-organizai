@@ -115,6 +115,14 @@ function toggleLoadingModalAddTask() {
   }
 }
 
+fileInput.addEventListener('change', () => {
+  if (fileInput.files.length > 0) {
+    btnGenerateTask.disabled = false;
+  } else {
+    btnGenerateTask.disabled = true;
+  }
+});
+
 function toggleLoadingTasks() {
   var firstLoadingKanban = $(".loadingTasks").first();
   if (firstLoadingKanban.css("display") !== "none") {
@@ -435,7 +443,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       let task = {
         titulo: returnValueById('title'),
-        usuarioID: 1,
+        usuarioID: 0,
         descricao: returnValueById('description').replace(/(\r\n|\n|\r)/gm, ""),
         prazo: returnValueById('end-date'),
         prioridade: returnValueById('priority'),

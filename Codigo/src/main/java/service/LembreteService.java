@@ -18,6 +18,9 @@ public class LembreteService {
 		lembreteDAO.connect();
 	    
 	    lembrete = gson.fromJson(req.body(), Lembrete.class);
+		int userid = req.session().attribute("userid");
+
+		lembrete.setUsuarioID(userid);
 	    lembreteDAO.createLembrete(lembrete);
 	    
 	    res.status(201);
@@ -29,9 +32,9 @@ public class LembreteService {
 	public Object read(Request req, Response res) {
 		
 	    lembreteDAO.connect();
-		int numeroAtomico = Integer.parseInt(req.params("reminderid"));
+		int reminderid = Integer.parseInt(req.params("reminderid"));
 		
-		Lembrete lembrete = lembreteDAO.readLembrete(numeroAtomico);
+		Lembrete lembrete = lembreteDAO.readLembrete(reminderid);
 	    
 	    if (lembrete != null) {
 
@@ -49,7 +52,9 @@ public class LembreteService {
 	public Object readAll(Request req, Response res) {
 		
 	    lembreteDAO.connect();
-	    Lembrete[] lembretes = lembreteDAO.readLembretes();
+		int userid = req.session().attribute("userid");
+
+	    Lembrete[] lembretes = lembreteDAO.readLembretes(userid);
 	    
 	    res.status(200);
 	    res.type("application/json");
