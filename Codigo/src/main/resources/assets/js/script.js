@@ -115,6 +115,14 @@ function toggleLoadingModalAddTask() {
   }
 }
 
+fileInput.addEventListener('change', () => {
+  if (fileInput.files.length > 0) {
+    btnGenerateTask.disabled = false;
+  } else {
+    btnGenerateTask.disabled = true;
+  }
+});
+
 function formatDate(dateValue) {
   let date = new Date(dateValue);
   let month, day, hours, minutes, seconds;
