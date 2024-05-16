@@ -253,6 +253,12 @@ function addCheckButtonListener() {
   });
 }
 
+function cleanKanban() {
+  todo.innerHTML = '';
+  doing.innerHTML = '';
+  done.innerHTML = '';
+}
+
 function showTaskInKanban(task) {
   const table = document.getElementById('tasksTable');
   let contentTodo = '';
@@ -462,8 +468,6 @@ document.addEventListener('DOMContentLoaded', () => {
           window.scrollTo(0, document.body.scrollHeight)
         }, 2000)
       }
-
-      showTaskInKanban(task);
     })
   }
 
@@ -765,6 +769,7 @@ function carregaCalendario() {
         $('#calendar').fullCalendar('destroy');
       }
       
+      cleanKanban();
       data.forEach(task => {
         showTaskInKanban(task);
       });
