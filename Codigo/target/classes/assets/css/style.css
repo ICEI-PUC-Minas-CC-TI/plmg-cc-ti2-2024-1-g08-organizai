@@ -262,3 +262,7 @@ body {
   display: none;
   margin: 32%;
 }
+
+.logo-header {
+  width: 250px;
+}

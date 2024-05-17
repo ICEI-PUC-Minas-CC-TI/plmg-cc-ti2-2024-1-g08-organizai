@@ -46,3 +46,7 @@ body {
   i{
     cursor: pointer;
   }
+
+  .logo-header {
+    width: 250px;
+  }
