@@ -45,6 +45,7 @@ function updateTask(task) {
     },
     body: JSON.stringify(task)
   })
+    .then(() => carregaCalendario())
     .catch((error) => {
       console.error('Error:', error);
     });
@@ -52,6 +53,7 @@ function updateTask(task) {
 
 function deleteTask(id) {
   fetch(`http://localhost:4567/tarefas/delete/${id}`)
+    .then(() => carregaCalendario())
     .catch((error) => {
       console.error('Error:', error);
     });
@@ -461,7 +463,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
       let task = {
         titulo: returnValueById('title'),
-        usuarioID: returnValueById('userIdEditInput'),
         descricao: returnValueById('description').replace(/(\r\n|\n|\r)/gm, ""),
         prazo: returnValueById('end-date'),
         prioridade: returnValueById('priority'),
