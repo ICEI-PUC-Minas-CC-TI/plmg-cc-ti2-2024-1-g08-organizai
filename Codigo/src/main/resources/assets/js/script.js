@@ -785,9 +785,13 @@ function carregaCalendario(loading = false) {
       }
       
       cleanKanban();
-      data.forEach(task => {
-        showTaskInKanban(task);
-      });
+      if (data !== null) {
+        data.forEach(task => {
+          showTaskInKanban(task);
+        });
+      } else {
+        $('#modalSemTarefasWarning').modal('show');
+      }
 
       jQuery(function () {
         jQuery('#calendar').fullCalendar({
@@ -801,7 +805,7 @@ function carregaCalendario(loading = false) {
             center: 'month,agendaWeek,agendaDay',
             right: 'prev, today, next'
           },
-          events: data.map(task => ({
+          events: data?.map(task => ({
             title: task.titulo,
             start: task.prazo,
           })),
