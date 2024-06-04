@@ -30,6 +30,7 @@
                     <div class="navbar-nav">
                         <a class="nav-link text-white" href="lista.html">Tarefas em lista</a>
                         <a class="nav-link text-white" href="lembretes.html">Gerenciar lembretes</a>
+                        <button type="button" class="nav-link text-white" data-bs-toggle="modal" data-bs-target="#modalLogout">Deslogar</button>
                     </div>
                 </div>
             </div>
@@ -75,6 +76,21 @@
                         style="color: #fff;"></button>
                 </div>
                 <p class="p-3 pb-0">Cadastre uma tarefa por meio do calendário, clicando num dia. Ou por meio do kan ban no símbolo +</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalLogout" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Você tem certeza que deseja sair do seu usuário?</h5>
+                    <button type="button" onclick="" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                        style="color: #fff;"></button>
+                </div>
+                <div class="modal-body">
+                    <a href="index.html"><button id="btnLogout" class="btn btn-danger">Sim, deslogar</button></a>
+                </div>
             </div>
         </div>
     </div>

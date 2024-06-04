@@ -21,6 +21,7 @@ const lateEditInput = document.getElementById('lateEditInput');
 const deleteId = document.getElementById('inputDeleteId');
 const fileInput = document.getElementById('fileInput');
 const btnGenerateTask = document.getElementById('btnGenerateTask');
+const btnLogout = document.getElementById('btnLogout');
 
 function createTask(task) {
   fetch('http://localhost:4567/tarefas', {
@@ -117,6 +118,15 @@ function toggleLoadingModalAddTask() {
     document.getElementById('loadingFormAddTask').style.display = 'block';
   }
 }
+
+btnLogout.addEventListener('click', () => {
+  fetch('http://localhost:4567/logout', {
+    method: 'GET',
+  })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+});
 
 fileInput.addEventListener('change', () => {
   if (fileInput.files.length > 0) {

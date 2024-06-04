@@ -19,6 +19,18 @@ const contentEditInput = document.getElementById('inputEditContent')
 //campo form deletar
 const deleteId = document.getElementById('inputDeleteId')
 
+//botao de logout
+const btnLogout = document.getElementById('btnLogout');
+
+btnLogout.addEventListener('click', () => {
+    fetch('http://localhost:4567/logout', {
+      method: 'GET',
+    })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  });
+
 function toggleLoadingRemindersInTable() {
     if ($('#loadingRemindersTable').css("display") !== "none") {
         $("#loadingRemindersTable").css("display", "none")
