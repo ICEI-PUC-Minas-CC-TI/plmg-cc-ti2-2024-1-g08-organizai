@@ -21,6 +21,7 @@ const lateEditInput = document.getElementById('lateEditInput');
 const deleteId = document.getElementById('inputDeleteId');
 const fileInput = document.getElementById('fileInput');
 const btnGenerateTask = document.getElementById('btnGenerateTask');
+const btnLogout = document.getElementById('btnLogout');
 
 function createTask(task) {
   fetch('http://localhost:4567/tarefas', {
@@ -118,6 +119,15 @@ function toggleLoadingModalAddTask() {
   }
 }
 
+btnLogout.addEventListener('click', () => {
+  fetch('http://localhost:4567/logout', {
+    method: 'GET',
+  })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+});
+
 fileInput.addEventListener('change', () => {
   if (fileInput.files.length > 0) {
     btnGenerateTask.disabled = false;
@@ -189,7 +199,7 @@ function showReminderModal(){
     body.innerHTML = ""
     dados.forEach(element => {
       body.innerHTML +=
-      `<li>${element.conteudo}</li>`
+      `<li class="reminder-tab">${element.conteudo}</li>`
     });
   })
 }
@@ -785,9 +795,13 @@ function carregaCalendario(loading = false) {
       }
       
       cleanKanban();
-      data.forEach(task => {
-        showTaskInKanban(task);
-      });
+      if (data !== null) {
+        data.forEach(task => {
+          showTaskInKanban(task);
+        });
+      } else {
+        $('#modalSemTarefasWarning').modal('show');
+      }
 
       jQuery(function () {
         jQuery('#calendar').fullCalendar({
@@ -801,7 +815,7 @@ function carregaCalendario(loading = false) {
             center: 'month,agendaWeek,agendaDay',
             right: 'prev, today, next'
           },
-          events: data.map(task => ({
+          events: data?.map(task => ({
             title: task.titulo,
             start: task.prazo,
           })),

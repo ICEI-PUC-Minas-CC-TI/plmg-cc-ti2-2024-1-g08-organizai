@@ -30,6 +30,11 @@
                   <a class="nav-link text-white" href="lista.html">Tarefas em lista</a>
                   <a class="nav-link text-white" href="lembretes.html">Gerenciar lembretes</a>
                 </div>
+                <div class="ms-auto">
+                    <button type="button" class="btn-transparent text-white" data-bs-toggle="modal" data-bs-target="#modalLogout">
+                        <img src="../assets/images/logout.png" alt="Icon" style="width: 24px; height: 24px; margin-right: 15px;">
+                    </button>
+                </div>
             </div>
           </div>
         </nav>
@@ -73,7 +78,20 @@
         </div>
     </div>
 
-
+    <div class="modal fade" id="modalLogout" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Você tem certeza que deseja sair do seu usuário?</h5>
+                    <button type="button" onclick="" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                        style="color: #fff;"></button>
+                </div>
+                <div class="modal-body">
+                    <a href="index.html"><button id="btnLogout" class="btn btn-danger">Sim, deslogar</button></a>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="modal fade" id="modalAddTask" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">

@@ -199,7 +199,7 @@ function showReminderModal(){
     body.innerHTML = ""
     dados.forEach(element => {
       body.innerHTML +=
-      `<li>${element.conteudo}</li>`
+      `<li class="reminder-tab">${element.conteudo}</li>`
     });
   })
 }
