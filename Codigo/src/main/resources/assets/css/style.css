@@ -275,6 +275,14 @@ body {
   transition: transform 0.4s ease;
 }
 
+.past-date-feedback {
+  display: none;
+  color: #FFC107;
+  font-size: 14px;
+  margin-top: 5px;
+  font-weight: lighter;
+}
+
 .btn-transparent:hover {
   transform: scale(1.1);
 }

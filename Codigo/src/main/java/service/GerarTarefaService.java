@@ -13,12 +13,12 @@ public class GerarTarefaService {
 		try {
 			byte[] imageData = req.bodyAsBytes();
 			
-			String extractedText = extraiTexto.extrairTextoDaImagem(imageData);
-			if (extractedText == null) {
+			String textoExtraido = extraiTexto.extrairTextoDaImagem(imageData);
+			if (textoExtraido == null) {
 				throw new NullPointerException("Extracted text is null");
 			}
 			
-			String camposExtraidos = extraiCampos.gerarCamposParaTarefa(extractedText);
+			String camposExtraidos = extraiCampos.gerarCamposParaTarefa(textoExtraido);
 			if (camposExtraidos == null) {
 				throw new NullPointerException("Generated fields are null");
 			}

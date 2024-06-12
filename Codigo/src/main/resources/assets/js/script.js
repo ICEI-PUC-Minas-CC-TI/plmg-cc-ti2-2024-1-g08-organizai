@@ -128,6 +128,31 @@ btnLogout.addEventListener('click', () => {
     });
 });
 
+dateInput.addEventListener('input', () => {
+  checkIfDateIsPast();
+});
+
+$('#modalAddTask').on('shown.bs.modal', () => {
+  checkIfDateIsPast();
+});
+
+function checkIfDateIsPast() {
+  if (dateInput.value !== '') {
+    const selectedDate = new Date(dateInput.value);
+    const currentDate = new Date();
+    console.log(selectedDate, currentDate)
+
+    if (selectedDate < currentDate) {
+      console.log('Data menor');
+      document.querySelector('.past-date-feedback').style.display = 'block';
+    } else {
+      console.log('Data maior');
+      document.querySelector('.past-date-feedback').style.display = 'none';
+    }
+  }
+}
+
+
 fileInput.addEventListener('change', () => {
   if (fileInput.files.length > 0) {
     btnGenerateTask.disabled = false;
