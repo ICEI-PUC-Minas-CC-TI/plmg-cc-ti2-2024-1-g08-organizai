@@ -40,6 +40,8 @@ public class ExtraiCamposTexto {
                 "Na resposta, retorne apenas um JSON com os campos 'deadline', 'title' e 'description', extraídos de uma anotação que será convertida em uma tarefa.\r\n"
                         + //
                         "\r\n" + //
+                        "Corrija possíveis erros ortográficos, sem alterar muito a extrutura do texto de origem.\r\n" + //
+                        "\r\n" + //
                         "A data deve ser escrita no formato 'yyyy-mm-dd hh:mm'.\r\n" + //
                         "\r\n" + //
                         "IMPORTANTE: NÃO INCLUA QUALQUER TEXTO ALÉM DO JSON NA RESPOSTA.\r\n" + //
