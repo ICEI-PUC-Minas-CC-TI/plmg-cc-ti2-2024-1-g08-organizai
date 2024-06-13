@@ -22,19 +22,27 @@
     <header>
         <nav class="navbar navbar-dark navbar-expand-lg">
             <div class="container-fluid">
-                <a class="navbar-brand text-white" href="home.html"><img src="../assets/images/logo.png" alt="" class="logo-header"></a>
+                <a class="navbar-brand " href="home.html"><img src="../assets/images/logo.svg" alt="" class="logo-header logo"></a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                     <div class="navbar-nav">
-                        <a class="nav-link text-white" href="lista.html">Tarefas em lista</a>
-                        <a class="nav-link text-white" href="lembretes.html">Gerenciar lembretes</a>
+                        <a class="nav-link " href="lista.html">Tarefas em lista</a>
+                        <a class="nav-link " href="lembretes.html">Gerenciar lembretes</a>
                     </div>
-                    <div class="ms-auto">
-                        <button type="button" class="btn-transparent text-white" data-bs-toggle="modal" data-bs-target="#modalLogout">
-                            <img src="../assets/images/logout.png" alt="Icon" style="width: 24px; height: 24px; margin-right: 15px;">
-                        </button>
+                    <div class="ms-auto me-3" style="font-size: 30px;">
+                        <span>
+                            <button type="button" class="btn-transparent " data-bs-toggle="modal" data-bs-target="#modalLogout">
+                                <i class="bi bi-box-arrow-in-left"></i>
+                            </button>
+                        </span>
+                        <span> 
+                            <button id="toggleTheme" type="button" class="btn-transparent">
+                                <i class="bi bi-brightness-high"></i>
+                            </button>
+                        </span>
+
                     </div>
                 </div>
             </div>
@@ -44,7 +52,7 @@
     <div class="p-5 d-flex flex-column flex-md-row justify-content-center align-items-center">
         <div class="card">
             <div class="card-body p-0">
-                <div id="calendar" class="fc-dark-theme">
+                <div id="calendar" class="fc-theme">
                     <div class="loadingTasks">
                         <div class="d-flex justify-content-center">
                             <div class="spinner-border" role="status">
@@ -85,7 +93,7 @@
 
 		<div class="time-mode animated zoomIn">Pomodoro</div>
 
-		<div>
+		<div id="pomodoro-controls">
 			<button class="timer-control animated slideInLeft">Iniciar</button>
 			<button class="reset-button animated slideInRight">Reiniciar</button>
 		</div>
@@ -140,11 +148,11 @@
         </div>
     </div>
 
-    <div class="container mt-4" id="kanban" data-bs-theme="dark">
+    <div class="container mt-4" id="kanban" data-bs-theme="">
         <div class="row linha-kanban">
             <div class="col-md-4 coluna-kanban card">
                 <div
-                    class="card-header text-white border-top border-bottom-0 border-5 border-warning border-opacity-75 colummn-header">
+                    class="card-header  border-top border-bottom-0 border-5 border-warning border-opacity-75 colummn-header">
                     A Fazer
                     <button id="" type="button" class="btn btn-sm float-end" data-bs-toggle="modal" data-bs-target="#modalAddTask" onclick="document.getElementById('statusEditInput').value = 'Pendente'"><i class="bi bi-plus"></i></button>
                 </div>
@@ -159,7 +167,7 @@
             </div>
             <div class="col-md-4 coluna-kanban card">
                 <div
-                    class="card-header text-white border-top border-bottom-0 border-5 border-primary border-opacity-75 colummn-header">
+                    class="card-header  border-top border-bottom-0 border-5 border-primary border-opacity-75 colummn-header">
                     Em Andamento
                     <button id="" type="button" class="btn btn-sm float-end" data-bs-toggle="modal" data-bs-target="#modalAddTask" onclick="document.getElementById('statusEditInput').value = 'Em Progresso'"><i class="bi bi-plus"></i></button>
                 </div>
@@ -174,7 +182,7 @@
             </div>
             <div class="col-md-4 coluna-kanban card">
                 <div
-                    class="card-header text-white border-top border-bottom-0 border-5 border-success border-opacity-75 colummn-header">
+                    class="card-header  border-top border-bottom-0 border-5 border-success border-opacity-75 colummn-header">
                     Concluído
                     <button id="" type="button" class="btn btn-sm float-end" data-bs-toggle="modal" data-bs-target="#modalAddTask" onclick="document.getElementById('statusEditInput').value = 'Concluída'"><i class="bi bi-plus"></i></button>
                 </div>
@@ -337,6 +345,7 @@
         crossorigin="anonymous"></script>
     <script src="https://SortableJS.github.io/Sortable/Sortable.js"></script>
     <script src="../assets/js/script.js"></script>
+    <script src="../assets/js/tema.js"></script>
     <link rel="stylesheet" href="../assets/css/style.css">
     <script src="../assets/js/pomodoro.js"></script>
     <link rel="stylesheet" href="../assets/css/pomodoro.css"
