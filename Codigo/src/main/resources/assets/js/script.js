@@ -46,7 +46,7 @@ function updateTask(task) {
     },
     body: JSON.stringify(task)
   })
-    .then(() => carregaCalendario())
+    .then(() => carregaCalendario(undefined, false))
     .catch((error) => {
       console.error('Error:', error);
     });
@@ -54,7 +54,7 @@ function updateTask(task) {
 
 function deleteTask(id) {
   fetch(`http://localhost:4567/tarefas/delete/${id}`)
-    .then(() => carregaCalendario())
+    .then(() => carregaCalendario(undefined, false))
     .catch((error) => {
       console.error('Error:', error);
     });
@@ -809,7 +809,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-function carregaCalendario(loading = false) {
+function carregaCalendario(loading = false, reloadKanban = true) {
   fetch('http://localhost:4567/tarefas')
   .then(response => response.json())
   .then(data => {
@@ -819,9 +819,9 @@ function carregaCalendario(loading = false) {
         $('#calendar').fullCalendar('destroy');
       }
       
-      cleanKanban();
+      reloadKanban && cleanKanban();
       if (data !== null) {
-        data.forEach(task => {
+        reloadKanban && data.forEach(task => {
           showTaskInKanban(task);
         });
       } else {
@@ -841,13 +841,14 @@ function carregaCalendario(loading = false) {
             right: 'prev, today, next'
           },
           events: data?.map(task => ({
+            id: task.tarefaID,
             title: task.titulo,
             start: task.prazo,
           })),
           eventDrop: function (evento, delta, revertFunc) {
             let eventoAtualizado;
             data.forEach(task => {
-              if (task.titulo === evento.title) {
+              if (task.tarefaID === evento.id) {
                 eventoAtualizado = {
                   tarefaID: task.tarefaID,
                   usuarioID: task.usuarioID,
@@ -857,7 +858,9 @@ function carregaCalendario(loading = false) {
                   status: task.status,
                   atrasada: task.atrasada,
                   prazo: evento.start.format('YYYY-MM-DD HH:mm')
-                }
+                };
+                $(`#task${task.tarefaID}`).closest('.task').remove();
+                showTaskInKanban(eventoAtualizado);
               }
             });
 
