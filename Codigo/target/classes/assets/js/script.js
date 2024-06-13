@@ -131,7 +131,7 @@ btnLogout.addEventListener('click', () => {
 dateInput.addEventListener('input', () => {
   checkIfDateIsPast();
 });
-
+ 
 $('#modalAddTask').on('shown.bs.modal', () => {
   checkIfDateIsPast();
 });

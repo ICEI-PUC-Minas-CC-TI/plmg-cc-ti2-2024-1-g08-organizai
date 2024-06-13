@@ -12,7 +12,7 @@ if(toggleTheme) {
         localStorage.setItem('theme', theme);
         setTheme(theme);
     });
-}
+} 
 
 function setTheme(theme) {
     if (theme === 'light') {

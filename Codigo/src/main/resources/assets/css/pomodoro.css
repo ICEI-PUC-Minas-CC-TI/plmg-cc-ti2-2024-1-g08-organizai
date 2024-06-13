@@ -91,7 +91,7 @@ button:hover {
 	stroke-dasharray: 597;
 	stroke-dashoffset: var(--dash-offset, 0);
 	transition: stroke-dashoffset 1s linear;
-}
+} 
 
 .dropdown-content {
 	display: flex;

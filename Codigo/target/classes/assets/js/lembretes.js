@@ -29,7 +29,7 @@ btnLogout.addEventListener('click', () => {
       .catch((error) => {
         console.error('Error:', error);
       });
-  });
+  }); 
 
 function toggleLoadingRemindersInTable() {
     if ($('#loadingRemindersTable').css("display") !== "none") {

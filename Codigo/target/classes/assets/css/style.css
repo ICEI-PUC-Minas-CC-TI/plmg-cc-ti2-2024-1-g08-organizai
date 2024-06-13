@@ -1,23 +1,71 @@
+:root {
+  --primary-color: #1E1E1E;
+  --secondary-color: #535353;
+  --background-color: #333;
+  --today-color: red;
+  --header-color: #2c2c2c; 
+  --popup-color: #222;
+  --submit-button-color: #fff;
+  --alert-color: #fff;
+  --info-color: rgba(255, 255, 255, 0.692);
+  --past-date-color: #FFC107;
+  --other-month-color: rgb(52, 52, 52);
+  --kanban-color: rgba(83, 83, 83, 0.231);
+  --task-background-color: #000000;
+  --navbar-background: var(--primary-color);
+  
+  --navbar-color: var(--primary-color);
+  --border-color: var(--primary-color);
+  --task-color: var(--header-color);
+  --button-color: var(--secondary-color);
+  --input-color: var(--background-color);
+  --modal-content-color: var(--secondary-color);
+
+  --text-color: #fff; 
+}
+
+.nav-link {
+  color: var(--text-color)!important;
+  font-weight: bold;
+}
+
+.animated {
+  color: var(--text-color)!important;
+}
+
+.circle-container {
+  stroke: #5c5c5cb7;
+}
+
 .card:not(.task):not(.coluna-kanban) {
   width: 75%;
-  color: white;
-  background-color: #1E1E1E;
+  color: var(--text-color);
+  background-color: var(--primary-color);
   padding: 3vw;
   border-radius: 15px;
 }
 
 .navbar {
-  background-color: #1E1E1E;
+  background-color: var(--navbar-color);
 }
 
-.fc-unthemed .fc-content, .fc-unthemed .fc-divider, .fc-unthemed .fc-list-heading td, .fc-unthemed .fc-list-view, .fc-unthemed .fc-popover, .fc-unthemed .fc-row, .fc-unthemed tbody, .fc-unthemed td, .fc-unthemed th, .fc-unthemed thead {
-  border-color: #1E1E1E;
+.fc-unthemed .fc-content,
+.fc-unthemed .fc-divider,
+.fc-unthemed .fc-list-heading td,
+.fc-unthemed .fc-list-view,
+.fc-unthemed .fc-popover,
+.fc-unthemed .fc-row,
+.fc-unthemed tbody,
+.fc-unthemed td,
+.fc-unthemed th,
+.fc-unthemed thead {
+  border-color: var(--border-color);
   border-width: 2px;
   border-top: 0;
-}   
+}
 
 .fc-day {
-  background-color: #535353;
+  background-color: var(--secondary-color);
   border-radius: 8px;
 }
 
@@ -26,11 +74,11 @@
 }
 
 .fc-unthemed td.fc-today {
-  background-color: #535353;
+  background-color: var(--secondary-color);
 }
 
 .fc-unthemed td.fc-today .fc-day-number {
-  background-color: red;
+  background-color: var(--today-color);
   margin: 3px;
   padding-left: 8px;
   padding-right: 8px;
@@ -38,7 +86,7 @@
 }
 
 .fc-other-month {
-  background-color: rgb(52, 52, 52);
+  background-color: var(--other-month-color);
 }
 
 .fc-row .fc-widget-header {
@@ -50,33 +98,33 @@ button {
 }
 
 .card:not(.task) button {
-  background-color: #1E1E1E;
+  background-color: var(--primary-color);
   box-shadow: none;
-  color: white;
+  color: var(--text-color);
   border: 0;
   font-weight: lighter;
 }
 
 .card:not(.task) button .fc-state-default {
-  background-color: #1E1E1E;
+  background-color: var(--primary-color);
   box-shadow: none;
-  color: white;
+  color: var(--text-color);
   border: 0;
 }
 
 .fc-state-default {
   background-image: none;
-}  
+}
 
 .fc-agendaWeek-button .fc-button .fc-state-default {
-  background-color: #1E1E1E;
+  background-color: var(--primary-color);
   box-shadow: none;
-  color: white;
+  color: var(--text-color);
   border: 0;
 }
 
 .card:not(.task):not(.coluna-kanban) .fc-state-active:not(.task):not(.coluna-kanban) {
-  background-color: #535353;
+  background-color: var(--secondary-color);
   border-radius: 10px;
   outline: thin dotted;
   outline: 0px auto;
@@ -84,11 +132,12 @@ button {
 }
 
 body {
-  background-color: #535353;
-  color: white;
+  background-color: var(--background-color);
+  color: var(--text-color);
 }
 
-.fc-content, .fc-event {
+.fc-content,
+.fc-event {
   background-color: black;
   padding: 2px;
   border-radius: 5px;
@@ -103,17 +152,17 @@ body {
 }
 
 .card-header {
-  background-color: #2c2c2c;
+  background-color: var(--header-color);
 }
 
 .coluna-kanban {
-  background-color: #5353533b!important;
+  background-color: var(--kanban-color)!important;
   border: none!important;
   padding: 25px;
 }
 
 .task {
-  background-color: #2c2c2c;
+  background-color: var(--task-color);
   margin: 5px;
 }
 
@@ -144,14 +193,14 @@ body {
 }
 
 body {
-  background-color: #333;
+  background-color: var(--background-color);
 }
 
 .start-button {
   padding: 10px 20px;
   font-size: 16px;
-  background-color: #535353;
-  color: white;
+  background-color: var(--button-color);
+  color: var(--text-color);
   border: none;
   cursor: pointer;
   border-radius: 20px;
@@ -162,13 +211,14 @@ body {
   margin: 0;
 }
 
-.popup, .popupnotif {
+.popup,
+.popupnotif {
   display: none;
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: #222;
+  background-color: var(--popup-color);
   padding: 20px;
   border: 1px solid #444;
   z-index: 100;
@@ -186,14 +236,14 @@ body {
   padding: 10px;
   width: 90%;
   border: none;
-  background-color: #333;
-  color: white;
+  background-color: var(--input-color);
+  color: var(--text-color);
 }
 
 .submit-button {
   padding: 5px 10px;
   font-size: 14px;
-  background-color: #fff;
+  background-color: var(--submit-button-color);
   color: #000;
   border: none;
   cursor: pointer;
@@ -202,33 +252,33 @@ body {
   margin-right: auto;
 }
 
-.alert{
+.alert {
   margin-top: 20px;
 }
 
-.modal-content{
-  color: #fff;
-  background-color: #535353;
+.modal-content {
+  color: var(--text-color);
+  background-color: var(--modal-content-color);
 }
 
-#addTask{
+#addTask {
   margin: 0 auto;
 }
 
-#formAddTask{
-  color: #fff;
+#formAddTask {
+  color: var(--text-color);
   font-weight: bolder;
 }
 
-.sectionInput{
-    margin: 10px;
+.sectionInput {
+  margin: 10px;
 }
 
 #lista {
   margin: 10px 0;
 }
 
-#openAddForm{
+#openAddForm {
   font-weight: bold;
   margin-top: 10px;
   width: 100%;
@@ -253,7 +303,7 @@ body {
 }
 
 #infoGenerate {
-  color: rgba(255, 255, 255, 0.692) !important;
+  color: var(--info-color) !important;
   padding-left: 4%;
 }
 
@@ -269,10 +319,18 @@ body {
 .btn-transparent {
   background-color: transparent;
   border: none;
-  color: white;
+  color: var(--text-color);
   outline: none;
   padding: 0;
   transition: transform 0.4s ease;
+}
+
+.past-date-feedback {
+  display: none;
+  color: var(--past-date-color);
+  font-size: 14px;
+  margin-top: 5px;
+  font-weight: lighter;
 }
 
 .btn-transparent:hover {
@@ -297,4 +355,12 @@ body {
   font-weight: bold;
   color: #333;
   margin-bottom: 5px;
+}
+
+.fc-content {
+  background-color: var(--task-background-color) !important;
+}
+
+.navbar {
+  background-color: var(--navbar-background);
 }

@@ -37,7 +37,7 @@ function startValues() {
 	totalTime = workTime;
 	timeRemaining = totalTime;
 	timer = null;
-}
+} 
 
 function toggleStartPause() {
 	isRunning ? pause() : start();

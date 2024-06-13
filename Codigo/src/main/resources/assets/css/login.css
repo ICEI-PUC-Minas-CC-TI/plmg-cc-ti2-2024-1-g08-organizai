@@ -7,7 +7,7 @@
 body {
     background-color: var(--background-color);
 }
-
+ 
 label, h1 {
     color: var(--text-color);
 }

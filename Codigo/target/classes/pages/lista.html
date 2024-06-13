@@ -20,25 +20,33 @@
 
     <header>
         <nav class="navbar navbar-dark navbar-expand-lg">
-          <div class="container-fluid">
-            <a class="navbar-brand text-white" href="home.html"><img src="../assets/images/logo.png" class="logo-header" alt=""></a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-              <div class="navbar-nav">
-                  <a class="nav-link text-white" href="lista.html">Tarefas em lista</a>
-                  <a class="nav-link text-white" href="lembretes.html">Gerenciar lembretes</a>
-                </div>
-                <div class="ms-auto">
-                    <button type="button" class="btn-transparent text-white" data-bs-toggle="modal" data-bs-target="#modalLogout">
-                        <img src="../assets/images/logout.png" alt="Icon" style="width: 24px; height: 24px; margin-right: 15px;">
-                    </button>
+            <div class="container-fluid">
+                <a class="navbar-brand " href="home.html"><img src="../assets/images/logo.svg" alt="" class="logo-header logo"></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <div class="navbar-nav">
+                        <a class="nav-link " href="lista.html">Tarefas em lista</a>
+                        <a class="nav-link " href="lembretes.html">Gerenciar lembretes</a>
+                    </div>
+                    <div class="ms-auto me-3" style="font-size: 30px;">
+                        <span>
+                            <button type="button" class="btn-transparent " data-bs-toggle="modal" data-bs-target="#modalLogout">
+                                <i class="bi bi-box-arrow-in-left"></i>
+                            </button> 
+                        </span>
+                        <span>
+                            <button id="toggleTheme" type="button" class="btn-transparent">
+                                <i class="bi bi-brightness-high"></i>
+                            </button>
+                        </span>
+
+                    </div>
                 </div>
             </div>
-          </div>
         </nav>
-      </header>
+    </header>
         
     <div class="container">
         <div id="msg">
@@ -224,6 +232,7 @@
         crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
         integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="../assets/js/tema.js"></script>
 </body>
 
 </html>
