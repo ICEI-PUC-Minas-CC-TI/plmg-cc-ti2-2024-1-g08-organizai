@@ -152,14 +152,15 @@ function checkIfDateIsPast() {
   }
 }
 
-
-fileInput.addEventListener('change', () => {
-  if (fileInput.files.length > 0) {
-    btnGenerateTask.disabled = false;
-  } else {
-    btnGenerateTask.disabled = true;
-  }
-});
+if(fileInput) {
+  fileInput.addEventListener('change', () => {
+    if (fileInput.files.length > 0) {
+      btnGenerateTask.disabled = false;
+    } else {
+      btnGenerateTask.disabled = true;
+    }
+  }); 
+}
 
 function toggleLoadingTasks() {
   var firstLoadingKanban = $(".loadingTasks").first();
@@ -302,8 +303,11 @@ function addCheckButtonListener() {
 }
 
 function cleanKanban() {
+  if (todo !== null)
   todo.innerHTML = '';
+  if (doing !== null)
   doing.innerHTML = '';
+  if (done !== null)
   done.innerHTML = '';
 }
 
@@ -400,7 +404,7 @@ function showTasks(tarefas) {
         <td>${formatPriority(task.prioridade)}</td> 
         <td>${task.status}</td>
         <td class="text-center"><i class="bi bi-pencil" title="Editar" 
-        onclick="showTask(${task.tarefaID}, '${task.titulo}', '${task.descricao}','${task.prazo}','${task.prioridade}', '${task.status}', '${task.atrasada}')">
+        onclick="showTask(${task.tarefaID}, ${task.usuarioID}, '${task.titulo}', '${task.descricao}','${task.prazo}','${task.prioridade}', '${task.status}', '${task.atrasada}')">
         </i></td> 
 
         <td class="text-center"><i class="bi bi-trash" title="Excluir"
@@ -429,7 +433,7 @@ function showTasksInTable() {
 function showTask(id, userid, title, description, start, priority, status, late) {
 
   idEditInput.value = id
-  userIdEditInput.value = userid
+  userIdEditInput.value = userid ?? ' '
   titleEditInput.value = title
   descriptionEditInput.value = description
   dateEditInput.value = start
@@ -828,6 +832,9 @@ function carregaCalendario(loading = false, reloadKanban = true) {
         $('#modalSemTarefasWarning').modal('show');
       }
 
+      if (calendar === null) {
+        return;
+      }
       jQuery(function () {
         jQuery('#calendar').fullCalendar({
           
