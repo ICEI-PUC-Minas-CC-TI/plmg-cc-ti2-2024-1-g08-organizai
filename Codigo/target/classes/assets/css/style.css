@@ -45,6 +45,17 @@
   border-radius: 15px;
 }
 
+@media (max-width: 768px) {
+  .card:not(.task):not(.coluna-kanban) {
+    width: auto;
+  }
+
+  #calendar-container {
+    padding: 0 !important;
+    padding-top: 3rem !important;
+  }
+}
+
 .navbar {
   background-color: var(--navbar-color);
 }
