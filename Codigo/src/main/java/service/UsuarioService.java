@@ -38,7 +38,7 @@ public class UsuarioService {
 	public Object read(Request req, Response res) {
 		
 	    usuarioDAO.connect();
-		int userid = Integer.parseInt(req.params("userid"));
+		int userid = req.session().attribute("userid");
 		
 		Usuario usuario = usuarioDAO.readUsuario(userid);
 	    
@@ -54,18 +54,6 @@ public class UsuarioService {
 	    }
 	}
 
-	
-	public Object readAll(Request req, Response res) {
-		
-	    usuarioDAO.connect();
-	    Usuario[] usuarios = usuarioDAO.readUsuarios();
-	    
-	    res.status(200);
-	    res.type("application/json");
-	    return gson.toJson(usuarios);
-	}
-
-	
 	public Object update(Request req, Response res) {
 		
 	    usuarioDAO.connect();
@@ -81,7 +69,7 @@ public class UsuarioService {
 	public Object delete(Request req, Response res) {
 		
 	    usuarioDAO.connect();
-		usuario = usuarioDAO.readUsuario(Integer.parseInt(req.params("userid")));
+		usuario = req.session().attribute("userid");
 	    
 	    if (usuario != null) {
 	        usuarioDAO.deleteUsuario(usuario);
