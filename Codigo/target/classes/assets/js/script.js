@@ -117,6 +117,7 @@ function toggleLoadingModalAddTask() {
     btnGenerateTask.disabled = true;
     document.getElementById('loadingFormAddTask').style.display = 'block';
   }
+  checkIfDateIsPast();
 }
 
 btnLogout.addEventListener('click', () => {
