@@ -6,6 +6,8 @@
   <meta name="viewport" content="width=device-width">
   <title>Cadastro</title>
   <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+  <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+  integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" /> -->
   <link rel="stylesheet" href="../assets/css/login.css">
 </head>
 
@@ -17,50 +19,47 @@
   <img src="../assets/images/logo.svg" alt="" class="mb-6 logo">
 
   <h1 class="text-2xl font-semibold mb-4 ">Cadastro</h1>
-  <form action="http://localhost:4567/cadastro" method="POST">
-<!-- Right: Cadastro Form -->
+  <form id="cadastroForm" action="http://localhost:4567/cadastro" method="POST">
+    <!-- Right: Cadastro Form -->
 
     <!-- Name Input -->
     <div class="mb-4">
-      <label for="nome" class="block ">Nome</label>
-      <input type="text" id="nome" name="nome" class="w-full border border-black rounded-md py-2 px-3 bg-gray-600 focus:outline-none focus:border-red-700 transition duration-300" autocomplete="off">
+      <label for="nome" class="block">Nome</label>
+      <input type="text" id="nome" name="nome" class="w-full border border-black rounded-md py-2 px-3 bg-gray-600 focus:outline-none focus:border-black-700 transition duration-300" autocomplete="off" >
+      <span id="nomeError" class="hidden text-sm text-red-500">Nome é obrigatório</span>
     </div>
     <!-- Name Input -->
 
     <!-- Email Input -->
     <div class="mb-4">
-      <label for="email" class="block ">E-mail</label>
-      <input type="text" id="email" name="email" class="w-full border border-black rounded-md py-2 px-3 bg-gray-600 focus:outline-none focus:border-red-700 transition duration-300" autocomplete="off">
+      <label for="email" class="block">E-mail</label>
+      <input type="email" id="email" name="email"  class="w-full border border-black rounded-md py-2 px-3 bg-gray-600 focus:outline-none focus:border-black-700 transition duration-300" autocomplete="off" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
+      <span id="emailError" class="hidden text-sm text-red-500">E-mail inválido</span>
     </div>
     <!-- Email Input -->
 
     <!-- Password Input -->
     <div class="mb-4">
-      <label for="senha" class="block ">Senha</label>
-      <input type="password" id="senha" name="senha" class="w-full border border-black rounded-md py-2 px-3 bg-gray-600 focus:outline-none focus:border-red-700 transition duration-300" autocomplete="off">
+      <label for="senha" class="block">Senha</label>
+      <input type="password" id="senha" name="senha" class="w-full border border-black rounded-md py-2 px-3 bg-gray-600 focus:outline-none focus:border-black-700 transition duration-300" autocomplete="off" >
+      <span id="senhaError" class="hidden text-sm text-red-500">Senha é obrigatória</span>
     </div>
     <!-- Password Input -->
 
     <!-- Confirm Password Input -->
     <div class="mb-4">
-      <label for="senha-confirmacao" class="block ">Repita a senha</label>
-      <input type="password" id="senha-confirmacao" name="senha-confirmacao" class="w-full border border-black rounded-md py-2 px-3 bg-gray-600 focus:outline-none focus:border-red-700 transition duration-300" autocomplete="off">
+      <label for="senha-confirmacao" class="block">Repita a senha</label>
+      <input type="password" id="senha-confirmacao" name="senha-confirmacao" class="w-full border border-black rounded-md py-2 px-3 bg-gray-600 focus:outline-none focus:border-black-700 transition duration-300" autocomplete="off" >
+      <span id="confirmacaoError" class="hidden text-sm text-red-500">Senhas não coincidem</span>
     </div>
     <!-- Confirm Password Input -->
-
-    <!-- Remember Me Checkbox -->
-    <div class="mb-4 flex items-center">
-      <input type="checkbox" id="remember" name="remember" class="text-red-500">
-      <label for="remember" class=" ml-2">Lembre de mim</label>
-    </div>
-    <!-- Remember Me Checkbox -->
-
 
     <!-- Cadastro Button -->
-    <button type="input" class="bg-red-600 hover:bg-gray-600  font-semibold rounded-md py-2 px-4 w-full transition duration-300">Cadastro</button>
+    <button type="submit" class="bg-red-600 hover:bg-gray-600 font-semibold rounded-md py-2 px-4 w-full transition duration-300">Cadastro</button>
     <!-- Cadastro Button -->
 
   </form>
+
   <!-- Sign in  Link -->
   <div class="mt-6 text-red-600 text-center">
     <p>Já tem uma conta? </p>
@@ -72,18 +71,109 @@
 
 <script src="../assets/js/tema.js"></script>
 <script>
-  // Get the fragment identifier from the URL
-  var fragment = window.location.hash;
+    // Get the fragment identifier from the URL
+    var fragment = window.location.hash;
 
-  // Remove the '#' character from the fragment
-  if (fragment.startsWith('#')) {
-      fragment = fragment.substring(1);
-  }
+    // Remove the '#' character from the fragment
+    if (fragment.startsWith('#')) {
+        fragment = fragment.substring(1);
+    }
 
-  if(fragment == "notfound"){
-      window.alert("E-mail ou senha inválido!")
-  }
-  
+    if(fragment == "notfound"){
+        window.alert("E-mail ou senha inválido!")
+    }
+
+    const nome = document.getElementById('nome');
+    const nomeError = document.getElementById('nomeError');
+    const email = document.getElementById('email');
+    const emailError = document.getElementById('emailError');
+    const senha = document.getElementById('senha');
+    const senhaError = document.getElementById('senhaError');
+    const senhaConfirmacao = document.getElementById('senha-confirmacao');
+    const confirmacaoError = document.getElementById('confirmacaoError');
+
+    nome.addEventListener('input', function() {
+      if (!nome.value.trim()) {
+        nome.classList.add('border-red-500');
+        nomeError.classList.remove('hidden');
+      } else {
+        nome.classList.remove('border-red-500');
+        nomeError.classList.add('hidden');
+      }
+    });
+
+    email.addEventListener('input', function() {
+      const emailPattern = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/;
+      if (!emailPattern.test(email.value.trim())) {
+        email.classList.add('border-red-500');
+        emailError.classList.remove('hidden');
+      } else {
+        email.classList.remove('border-red-500');
+        emailError.classList.add('hidden');
+      }
+    });
+
+    senha.addEventListener('input', function() {
+      if (!senha.value.trim()) {
+        senha.classList.add('border-red-500');
+        senhaError.classList.remove('hidden');
+      } else {
+        senha.classList.remove('border-red-500');
+        senhaError.classList.add('hidden');
+      }
+      validatePasswordMatch();
+    });
+
+    senhaConfirmacao.addEventListener('input', function() {
+      validatePasswordMatch();
+    });
+
+    function validatePasswordMatch() {
+      if (senha.value.trim() !== senhaConfirmacao.value.trim()) {
+        senhaConfirmacao.classList.add('border-red-500');
+        confirmacaoError.classList.remove('hidden');
+      } else {
+        senhaConfirmacao.classList.remove('border-red-500');
+        confirmacaoError.classList.add('hidden');
+      }
+    }
+
+    document.getElementById('cadastroForm').addEventListener('submit', function(event) {
+      let isValid = true;
+
+      // Validate Nome
+      if (!nome.value.trim()) {
+        nome.classList.add('border-red-500');
+        nomeError.classList.remove('hidden');
+        isValid = false;
+      }
+
+      // Validate Email
+      const emailPattern = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/;
+      if (!emailPattern.test(email.value.trim())) {
+        email.classList.add('border-red-500');
+        emailError.classList.remove('hidden');
+        isValid = false;
+      }
+
+      // Validate Senha
+      if (!senha.value.trim()) {
+        senha.classList.add('border-red-500');
+        senhaError.classList.remove('hidden');
+        isValid = false;
+      }
+
+      // Validate Senha Confirmacao
+      if (senha.value.trim() !== senhaConfirmacao.value.trim()) {
+        senhaConfirmacao.classList.add('border-red-500');
+        confirmacaoError.classList.remove('hidden');
+        isValid = false;
+      }
+
+      if (!isValid) {
+        event.preventDefault();
+      }
+    });
 </script>
 
 </html>
