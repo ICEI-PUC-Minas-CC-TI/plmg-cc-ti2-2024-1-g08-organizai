@@ -117,6 +117,7 @@ function toggleLoadingModalAddTask() {
     btnGenerateTask.disabled = true;
     document.getElementById('loadingFormAddTask').style.display = 'block';
   }
+  checkIfDateIsPast();
 }
 
 btnLogout.addEventListener('click', () => {
@@ -852,6 +853,25 @@ function carregaCalendario(loading = false, reloadKanban = true) {
             title: task.titulo,
             start: task.prazo,
           })),
+          eventClick: function (evento) {
+            let eventoAtualizado;
+            data.forEach(task => {
+              if (task.titulo === evento.title) {
+                eventoAtualizado = {
+                  tarefaID: task.tarefaID,
+                  usuarioID: task.usuarioID,
+                  titulo: task.titulo,
+                  descricao: task.descricao,
+                  prioridade: task.prioridade,
+                  status: task.status,
+                  atrasada: task.atrasada,
+                  prazo: task.prazo
+                }
+              }
+            }
+            );
+            showTask(eventoAtualizado.tarefaID, eventoAtualizado.usuarioID, eventoAtualizado.titulo, eventoAtualizado.descricao, eventoAtualizado.prazo, eventoAtualizado.prioridade, eventoAtualizado.status, eventoAtualizado.atrasada);
+          },  
           eventDrop: function (evento, delta, revertFunc) {
             let eventoAtualizado;
             data.forEach(task => {
