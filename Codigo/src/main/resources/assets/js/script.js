@@ -141,13 +141,10 @@ function checkIfDateIsPast() {
   if (dateInput.value !== '') {
     const selectedDate = new Date(dateInput.value);
     const currentDate = new Date();
-    console.log(selectedDate, currentDate)
 
     if (selectedDate < currentDate) {
-      console.log('Data menor');
       document.querySelector('.past-date-feedback').style.display = 'block';
     } else {
-      console.log('Data maior');
       document.querySelector('.past-date-feedback').style.display = 'none';
     }
   }
@@ -238,51 +235,54 @@ function formatPriority(priority) {
 }
 
 function addButtonListener(btn, status) {
-  btn.addEventListener("click", () => {
+  status === "Em Progresso" && btn.addEventListener("click", () => {
     const taskContainer = btn.closest('.task');
-    const taskId = taskContainer.querySelector('.id').innerText;
-
-    if (status === "Em Progresso") {
-      btn.innerHTML = '<i class="bi bi-check"></i>';
-      btn.classList.add("check");
-      btn.classList.remove("start");
-      let elementoIrmaoAnterior = btn.previousElementSibling;
-      while (elementoIrmaoAnterior && !elementoIrmaoAnterior.classList.contains('btn-editar')) {
-        elementoIrmaoAnterior = elementoIrmaoAnterior.previousElementSibling;
-      }
-      let eClick = elementoIrmaoAnterior.onclick.toString().match(/showTask\([^)]*\)/)[0];
-      let taskArray = eClick.split(',');
-      taskArray[taskArray.length - 2] = ` ${status}`;
-      let modifiedOnclick = taskArray.join(',');
-      elementoIrmaoAnterior.setAttribute('onclick', modifiedOnclick);
-      taskContainer.remove();
-      doing.insertBefore(taskContainer, doing.firstChild);
-      addCheckButtonListener();
-      //chamo funcao do modal de lembretes
-      showReminderModal();
-    } else if (status === "Concluída") {
-      const taskBody = taskContainer.querySelector('.task-body');
-      taskBody.classList.remove('border-danger-subtle', 'border-warning-subtle', 'border-success-subtle', 'border-start', 'rounded-start-2', 'border-5');
-      taskBody.classList.add("border-5", "border-start", "border-success", "rounded-start-2");
-      let elementoIrmaoAnterior = btn.previousElementSibling;
-      while (elementoIrmaoAnterior && !elementoIrmaoAnterior.classList.contains('btn-editar')) {
-        elementoIrmaoAnterior = elementoIrmaoAnterior.previousElementSibling;
-      }
-      let eClick = elementoIrmaoAnterior.onclick.toString().match(/showTask\([^)]*\)/)[0];
-      let taskArray = eClick.split(',');
-      taskArray[taskArray.length - 2] = ` ${status}`;
-      let modifiedOnclick = taskArray.join(',');
-      elementoIrmaoAnterior.setAttribute('onclick', modifiedOnclick);
-      elementoIrmaoAnterior = btn.previousElementSibling;
-      while (elementoIrmaoAnterior && !elementoIrmaoAnterior.classList.contains('deadline')) {
-        elementoIrmaoAnterior = elementoIrmaoAnterior.previousElementSibling;
-      }
-      elementoIrmaoAnterior.classList.remove('text-danger');
-      btn.remove();
-      taskBody.innerHTML += '<p class="float-end m-0 text-success task-status-completed">Tarefa completa!</p>';
-      taskContainer.remove();
-      done.insertBefore(taskContainer, done.firstChild);
+    let elementoIrmaoAnterior = btn.previousElementSibling;
+    while (elementoIrmaoAnterior && !elementoIrmaoAnterior.classList.contains('btn-editar')) {
+      elementoIrmaoAnterior = elementoIrmaoAnterior.previousElementSibling;
     }
+    let eClick = elementoIrmaoAnterior.onclick.toString().match(/showTask\([^)]*\)/)[0];
+    let taskArray = eClick.split(',');
+    taskArray[taskArray.length - 2] = ` '${status}'`;
+    let modifiedOnclick = taskArray.join(',');
+    elementoIrmaoAnterior.setAttribute('onclick', modifiedOnclick);
+    taskContainer.remove();
+    doing.insertBefore(taskContainer, doing.firstChild);
+    btn.innerHTML = '<i class="bi bi-check"></i>';
+    btn.classList.add("check");
+    btn.classList.remove("start");
+    const newButton = btn.cloneNode(true);
+    btn.parentNode.replaceChild(newButton, btn);
+    addCheckButtonListener();
+    //chamo funcao do modal de lembretes
+    showReminderModal();
+  });
+  
+  
+  status === "Concluída" && btn.addEventListener("click", () => {
+    const taskContainer = btn.closest('.task');
+    const taskId = taskContainer.querySelector('.id').innerText
+    const taskBody = taskContainer.querySelector('.task-body');
+    taskBody.classList.remove('border-danger-subtle', 'border-warning-subtle', 'border-success-subtle', 'border-start', 'rounded-start-2', 'border-5');
+    taskBody.classList.add("border-5", "border-start", "border-success", "rounded-start-2");
+    let elementoIrmaoAnterior = btn.previousElementSibling;
+    while (elementoIrmaoAnterior && !elementoIrmaoAnterior.classList.contains('btn-editar')) {
+      elementoIrmaoAnterior = elementoIrmaoAnterior.previousElementSibling;
+    }
+    let eClick = elementoIrmaoAnterior.onclick.toString().match(/showTask\([^)]*\)/)[0];
+    let taskArray = eClick.split(',');
+    taskArray[taskArray.length - 2] = ` '${status}'`;
+    let modifiedOnclick = taskArray.join(',');
+    elementoIrmaoAnterior.setAttribute('onclick', modifiedOnclick);
+    elementoIrmaoAnterior = btn.previousElementSibling;
+    while (elementoIrmaoAnterior && !elementoIrmaoAnterior.classList.contains('deadline')) {
+      elementoIrmaoAnterior = elementoIrmaoAnterior.previousElementSibling;
+    }
+    elementoIrmaoAnterior.classList.remove('text-danger');
+    btn.remove();
+    taskBody.innerHTML += '<p class="float-end m-0 text-success task-status-completed">Tarefa completa!</p>';
+    taskContainer.remove();
+    done.insertBefore(taskContainer, done.firstChild);
 
     updateStatus(taskId, status);
     addButtonListener(btn, status);
@@ -621,7 +621,7 @@ document.addEventListener('DOMContentLoaded', () => {
           let btnEditar = droppedTask.querySelector('.btn-editar');
           let eClick = btnEditar.onclick.toString().match(/showTask\([^)]*\)/)[0];
           let taskArray = eClick.split(',');
-          taskArray[taskArray.length - 2] = ` 0`;
+          taskArray[taskArray.length - 2] = ` 'Pendente'`;
           let modifiedOnclick = taskArray.join(',');
           btnEditar.setAttribute('onclick', modifiedOnclick);
           updateStatus(taskId, "Pendente");
@@ -635,7 +635,7 @@ document.addEventListener('DOMContentLoaded', () => {
           let btnEditar = droppedTask.querySelector('.btn-editar');
           let eClick = btnEditar.onclick.toString().match(/showTask\([^)]*\)/)[0];
           let taskArray = eClick.split(',');
-          taskArray[taskArray.length - 2] = ` 1`;
+          taskArray[taskArray.length - 2] = ` 'Em Progresso'`;
           let modifiedOnclick = taskArray.join(',');
           btnEditar.setAttribute('onclick', modifiedOnclick);
           updateStatus(taskId, "Em Progresso");
@@ -652,7 +652,7 @@ document.addEventListener('DOMContentLoaded', () => {
           let btnEditar = droppedTask.querySelector('.btn-editar');
           let eClick = btnEditar.onclick.toString().match(/showTask\([^)]*\)/)[0];
           let taskArray = eClick.split(',');
-          taskArray[taskArray.length - 2] = ` 2`;
+          taskArray[taskArray.length - 2] = ` 'Concluída'`;
           let modifiedOnclick = taskArray.join(',');
           btnEditar.setAttribute('onclick', modifiedOnclick);
           let prazo = droppedTask.querySelector('.deadline');
@@ -686,7 +686,7 @@ document.addEventListener('DOMContentLoaded', () => {
           let btnEditar = droppedTask.querySelector('.btn-editar');
           let eClick = btnEditar.onclick.toString().match(/showTask\([^)]*\)/)[0];
           let taskArray = eClick.split(',');
-          taskArray[taskArray.length - 2] = ` 0`;
+          taskArray[taskArray.length - 2] = ` 'Pendente'`;
           let modifiedOnclick = taskArray.join(',');
           btnEditar.setAttribute('onclick', modifiedOnclick);
           updateStatus(taskId, "Pendente");
@@ -700,7 +700,7 @@ document.addEventListener('DOMContentLoaded', () => {
           let btnEditar = droppedTask.querySelector('.btn-editar');
           let eClick = btnEditar.onclick.toString().match(/showTask\([^)]*\)/)[0];
           let taskArray = eClick.split(',');
-          taskArray[taskArray.length - 2] = ` 1`;
+          taskArray[taskArray.length - 2] = ` 'Em Progresso'`;
           let modifiedOnclick = taskArray.join(',');
           btnEditar.setAttribute('onclick', modifiedOnclick);
           updateStatus(taskId, "Em Progresso");
@@ -715,7 +715,7 @@ document.addEventListener('DOMContentLoaded', () => {
           let btnEditar = droppedTask.querySelector('.btn-editar');
           let eClick = btnEditar.onclick.toString().match(/showTask\([^)]*\)/)[0];
           let taskArray = eClick.split(',');
-          taskArray[taskArray.length - 2] = ` 2`;
+          taskArray[taskArray.length - 2] = ` 'Concluída'`;
           let modifiedOnclick = taskArray.join(',');
           btnEditar.setAttribute('onclick', modifiedOnclick);
           let prazo = droppedTask.querySelector('.deadline');
@@ -761,7 +761,7 @@ document.addEventListener('DOMContentLoaded', () => {
           let btnEditar = droppedTask.querySelector('.btn-editar');
           let eClick = btnEditar.onclick.toString().match(/showTask\([^)]*\)/)[0];
           let taskArray = eClick.split(',');
-          taskArray[taskArray.length - 2] = ` 0`;
+          taskArray[taskArray.length - 2] = ` 'Pendente'`;
           let modifiedOnclick = taskArray.join(',');
           btnEditar.setAttribute('onclick', modifiedOnclick);
           updateStatus(taskId, "Pendente");
@@ -785,7 +785,7 @@ document.addEventListener('DOMContentLoaded', () => {
           let btnEditar = droppedTask.querySelector('.btn-editar');
           let eClick = btnEditar.onclick.toString().match(/showTask\([^)]*\)/)[0];
           let taskArray = eClick.split(',');
-          taskArray[taskArray.length - 2] = ` 1`;
+          taskArray[taskArray.length - 2] = ` 'Em Progresso'`;
           let modifiedOnclick = taskArray.join(',');
           btnEditar.setAttribute('onclick', modifiedOnclick);
           updateStatus(taskId, "Em Progresso");
@@ -800,7 +800,7 @@ document.addEventListener('DOMContentLoaded', () => {
           let btnEditar = droppedTask.querySelector('.btn-editar');
           let eClick = btnEditar.onclick.toString().match(/showTask\([^)]*\)/)[0];
           let taskArray = eClick.split(',');
-          taskArray[taskArray.length - 2] = ` 2`;
+          taskArray[taskArray.length - 2] = ` 'Concluída'`;
           let modifiedOnclick = taskArray.join(',');
           btnEditar.setAttribute('onclick', modifiedOnclick);
           let prazo = droppedTask.querySelector('.deadline');
@@ -883,7 +883,7 @@ function carregaCalendario(loading = false, reloadKanban = true) {
                   descricao: task.descricao,
                   prioridade: task.prioridade,
                   status: task.status,
-                  atrasada: task.atrasada,
+                  atrasada: evento.start.isBefore(moment()),
                   prazo: evento.start.format('YYYY-MM-DD HH:mm')
                 };
                 $(`#task${task.tarefaID}`).closest('.task').remove();

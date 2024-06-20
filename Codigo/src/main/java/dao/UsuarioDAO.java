@@ -84,42 +84,13 @@ public class UsuarioDAO {
 		return status;
 	}
 
-	public Usuario[] readUsuarios() {
-		
-		Usuario[] usuarios = null;
-		
-		try {
-			Statement st = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-			ResultSet rs = st.executeQuery("SELECT email, nome, senhahash, userid FROM public.usuario ORDER BY userid ASC;");
-			
-			if(rs.next()) {
-				rs.last();
-				usuarios = new Usuario[rs.getRow()];
-				rs.beforeFirst();
-				
-				for(int i = 0; rs.next(); i++) {
-					usuarios[i] = new Usuario(rs.getInt("userid"),
-							rs.getString("nome"), 
-							rs.getString("email"), 
-							rs.getString("senhahash"));
-				}
-			}
-			
-			st.close();
-			
-		}catch(SQLException e){
-			System.err.println(e.getMessage());
-		}
-		
-		return usuarios;
-	}
 	
 	public Usuario readUsuario(int userid) {
 		
 		Usuario usuario = null;
 		
 		try {
-			PreparedStatement ps = conn.prepareStatement("SELECT email, nome, senhahash, userid FROM public.usuario WHERE userid = ?");
+			PreparedStatement ps = conn.prepareStatement("SELECT email, nome, userid FROM public.usuario WHERE userid = ?");
 			ps.setInt(1, userid);
 			ResultSet rs = ps.executeQuery();
 			
@@ -127,8 +98,7 @@ public class UsuarioDAO {
 				
 				usuario = new Usuario(rs.getInt("userid"),
 						rs.getString("nome"), 
-						rs.getString("email"), 
-						rs.getString("senhahash"));
+						rs.getString("email"), null);
 			}
 			 
 			ps.close();
@@ -193,7 +163,7 @@ public class UsuarioDAO {
 		Usuario usuario = null;
 		
 		try {
-			PreparedStatement ps = conn.prepareStatement("SELECT userid, nome, email, senhahash FROM public.usuario WHERE email = ?");
+			PreparedStatement ps = conn.prepareStatement("SELECT userid, senhahash FROM public.usuario WHERE email = ?");
 			ps.setString(1, usuarioLogin.getEmail());
 			ResultSet rs = ps.executeQuery();
 			
@@ -202,9 +172,9 @@ public class UsuarioDAO {
 				if(argon2.verify(rs.getString("senhahash"), usuarioLogin.getSenha()))
 				{
 					usuario = new Usuario(rs.getInt("userid"),
-					rs.getString("nome"), 
-					rs.getString("email"), 
-					rs.getString("senhahash"));
+					null, 
+					null, 
+					null);
 				}
 			}
 			

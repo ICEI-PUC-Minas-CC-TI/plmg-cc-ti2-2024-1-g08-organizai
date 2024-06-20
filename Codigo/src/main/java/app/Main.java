@@ -51,10 +51,9 @@ public class Main {
         });
 		
 		post("/cadastro", (req,res) -> usuarioService.create(req, res));
-		get ("/usuarios", (req, res) -> usuarioService.readAll(req, res));
-		get ("/usuarios/:userid", (req, res) -> usuarioService.read(req, res));
-		put ("/usuarios/update", (req, res) -> usuarioService.update(req, res));
-		get ("/usuarios/delete/:userid", (req, res) -> usuarioService.delete(req, res));
+		get ("/usuario", (req, res) -> usuarioService.read(req, res));
+		put ("/usuario/update", (req, res) -> usuarioService.update(req, res));
+		get ("/usuario/delete", (req, res) -> usuarioService.delete(req, res));
 		
 		post("/login", (req,res) -> usuarioService.login(req, res));
 		get("/logout", (req, res) -> { 
