@@ -1,31 +1,60 @@
 cff-version: 1.0.1
 message: Please cite this software using these metadata.
-title: 
+title: OrganizAi
 authors:
-  - family-names: 
-    given-names: 
-  - family-names: 
-    given-names: 
-  - family-names: 
-    given-names: 
-  - family-names: 
-    given-names: 
-  - family-names: 
-    given-names: 
-  - family-names: 
-    given-names:
+  - family-names: Leôncio Jales
+    given-names: André
+  - family-names: Rafael Santos Oliveira
+    given-names: Bruno
+  - family-names: Alvarenga Ribeiro Carvalho
+    given-names: Gustavo
+  - family-names: Pereira Felix
+    given-names: Gustavo
   - name-suffix: Professor
     affiliation: PUC Minas
-    family-names: 
-    given-names: 
+    family-names: Soares Vieira de Vasconcelos
+    given-names: Amália
   - name-suffix: Professor
     affiliation: PUC Minas
-    family-names: 
-    given-names: 
+    family-names: Jerônimo de Almeida
+    given-names: Sandro
 keywords:
-  - 
-  - 
-repository-code: 
+  - Organização
+  - Tarefas
+  - Universitários
+  - Procrastinação
+repository-code: https://github.com/ICEI-PUC-Minas-CC-TI/plmg-cc-ti2-2024-1-g08-organizai
 license: CC-BY-4.0
 version: 1.0.0
-date-released: 2022-07-14
+date-released: 2024-06-21
+=======
+cff-version: 1.0.1
+message: Please cite this software using these metadata.
+title: OrganizAi
+authors:
+  - family-names: Leôncio Jales
+    given-names: André
+  - family-names: Rafael Santos Oliveira
+    given-names: Bruno
+  - family-names: Alvarenga Ribeiro Carvalho
+    given-names: Gustavo
+  - family-names: Pereira Felix
+    given-names: Gustavo
+  - name-suffix: Professor
+    affiliation: PUC Minas
+    family-names: Soares Vieira de Vasconcelos
+    given-names: Amália
+  - name-suffix: Professor
+    affiliation: PUC Minas
+    family-names: Jerônimo de Almeida
+    given-names: Sandro
+keywords:
+  - Organização
+  - Tarefas
+  - Universitários
+  - Procrastinação
+repository-code: https://github.com/ICEI-PUC-Minas-CC-TI/plmg-cc-ti2-2024-1-g08-organizai
+license: CC-BY-4.0
+version: 1.0.0
+date-released: 2024-06-21
+>>>>>>>
