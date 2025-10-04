@@ -1,3 +1,11 @@
+// MELHORIA: 1. Organização Geral e 6. Padrão MVC. O código está em um único arquivo. O ideal seria dividi-lo em módulos para separar responsabilidades, seguindo um padrão como Model-View-Controller.
+// Ex: api.js (para chamadas fetch), ui.js (para manipulação do DOM), kanban.js (lógica do kanban), etc.
+
+// MELHORIA: 15. Uso de Constantes. A URL base da API se repete. O ideal seria declará-la como uma constante.
+// const API_BASE_URL = 'http://localhost:4567';
+// const STATUS = { PENDENTE: "Pendente", PROGRESSO: "Em Progresso", CONCLUIDA: "Concluída" };
+
+// MELHORIA: 7. Manipulação do DOM. Os seletores estão espalhados. Centralizá-los em um objeto ou usar uma função utilitária (ex: const getEl = id => document.getElementById(id);) reduziria a verbosidade.
 const todo = document.getElementById('to-do');
 const doing = document.getElementById('doing');
 const done = document.getElementById('done');
@@ -23,6 +31,8 @@ const fileInput = document.getElementById('fileInput');
 const btnGenerateTask = document.getElementById('btnGenerateTask');
 const btnLogout = document.getElementById('btnLogout');
 
+// MELHORIA: 14. Separação de Responsabilidades. Funções de API (como createTask) deveriam estar em um módulo separado (ex: api.js) para isolar a lógica de comunicação com o backend da lógica de UI.
+// MELHORIA: 4. Tratamento de Erros. O .catch apenas loga o erro no console. O ideal seria exibir uma mensagem de erro para o usuário (ex: usando a função displayErrMessage).
 function createTask(task) {
   fetch('http://localhost:4567/tarefas', {
     method: 'POST',
@@ -30,15 +40,17 @@ function createTask(task) {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(task),
-  }) 
+  })
     .then(() => carregaCalendario())
     .catch((error) => {
       console.error('Error:', error);
+      // MELHORIA: 12. Feedback Visual. Aqui deveria ser chamada uma função para notificar o usuário sobre o erro.
       carregaCalendario();
     });
 }
 
 function updateTask(task) {
+  // MELHORIA: 4. Tratamento de Erros. O tratamento de erro deveria ser mais robusto, informando o usuário em caso de falha na atualização.
   fetch('http://localhost:4567/tarefas/update', {
     method: 'PUT',
     headers: {
@@ -60,6 +72,7 @@ function deleteTask(id) {
     });
 }
 
+// MELHORIA: 2. Funções Longas e SRP. Esta função faz duas chamadas de API em sequência. Poderia ser otimizada para receber o objeto 'task' completo e apenas modificar o status, evitando a primeira chamada fetch.
 function updateStatus(taskId, updatedStatus) {
   let task;
 
@@ -75,6 +88,7 @@ function updateStatus(taskId, updatedStatus) {
     });
 }
 
+// MELHORIA: 19. Documentação e Comentários. Funções com lógica mais complexa, como a interação com FileReader e envio de binários, deveriam ter comentários explicando o processo.
 function generateTask() {
   toggleLoadingModalAddTask();
   let file = fileInput.files[0];
@@ -91,6 +105,7 @@ function generateTask() {
     })
       .then(response => response.json())
       .then(data => {
+        // MELHORIA: 8. Nomenclatura. 'data' é genérico. Um nome como 'suggestedTask' seria mais descritivo.
         showSuggestion(data);
         toggleLoadingModalAddTask();
       })
@@ -132,11 +147,12 @@ btnLogout.addEventListener('click', () => {
 dateInput.addEventListener('input', () => {
   checkIfDateIsPast();
 });
- 
+
 $('#modalAddTask').on('shown.bs.modal', () => {
   checkIfDateIsPast();
 });
 
+// MELHORIA: 9. Manipulação de Datas. O uso de `new Date()` pode gerar inconsistências com fusos horários. Bibliotecas como `date-fns` ou `moment.js` (já usada no código) poderiam padronizar isso.
 function checkIfDateIsPast() {
   if (dateInput.value !== '') {
     const selectedDate = new Date(dateInput.value);
@@ -150,14 +166,14 @@ function checkIfDateIsPast() {
   }
 }
 
-if(fileInput) {
+if (fileInput) {
   fileInput.addEventListener('change', () => {
     if (fileInput.files.length > 0) {
       btnGenerateTask.disabled = false;
     } else {
       btnGenerateTask.disabled = true;
     }
-  }); 
+  });
 }
 
 function toggleLoadingTasks() {
@@ -177,8 +193,11 @@ function toggleLoadingTasksInTable() {
   }
 }
 
+// MELHORIA: 16. Funções Utilitárias. Funções genéricas como `formatDate` poderiam estar em um arquivo `utils.js` para serem reutilizadas em outras partes do projeto.
 function formatDate(dateValue) {
   let date = new Date(dateValue);
+  // MELHORIA: 9. Manipulação de Datas. O objeto `Intl.DateTimeFormat` é uma forma nativa e mais robusta de formatar datas.
+  // Ex: return new Intl.DateTimeFormat('pt-BR', { dateStyle: 'short', timeStyle: 'medium' }).format(date);
   let month, day, hours, minutes, seconds;
 
   if (date.getMonth() + 1 < 10) {
@@ -214,26 +233,28 @@ function formatDate(dateValue) {
   return `${day}/${month}/${date.getFullYear()} ${hours}:${minutes}:${seconds}`;
 }
 
-function showReminderModal(){
+function showReminderModal() {
   $('#modalReminderTab').modal('show');
   fetch('http://localhost:4567/lembretes')
-  .then(dados => dados.json())
-  .then(dados =>{
-    const body = document.getElementById('modal-reminders');
-    body.innerHTML = ""
-    dados.forEach(element => {
-      body.innerHTML +=
-      `<li class="reminder-tab">${element.conteudo}</li>`
-    });
-  })
+    .then(dados => dados.json())
+    .then(dados => {
+      const body = document.getElementById('modal-reminders');
+      body.innerHTML = ""
+      dados.forEach(element => {
+        body.innerHTML +=
+          `<li class="reminder-tab">${element.conteudo}</li>`
+      });
+    })
 }
 
+// MELHORIA: 16. Funções Utilitárias. `formatPriority` também é um candidato para um arquivo `utils.js`.
 function formatPriority(priority) {
   if (priority == 'Alta') return 'ALTA';
   else if (priority == 'Média') return 'MÉDIA';
   else if (priority == 'Baixa') return 'BAIXA';
 }
 
+// MELHORIA: 2. Funções Longas e 5. Repetição de Código. A lógica dentro desta função é muito complexa e repetida para "Em Progresso" e "Concluída". Ela manipula o DOM, atualiza atributos e adiciona novos listeners. O ideal seria dividi-la em funções menores e mais específicas.
 function addButtonListener(btn, status) {
   status === "Em Progresso" && btn.addEventListener("click", () => {
     const taskContainer = btn.closest('.task');
@@ -257,8 +278,8 @@ function addButtonListener(btn, status) {
     //chamo funcao do modal de lembretes
     showReminderModal();
   });
-  
-  
+
+
   status === "Concluída" && btn.addEventListener("click", () => {
     const taskContainer = btn.closest('.task');
     const taskId = taskContainer.querySelector('.id').innerText
@@ -305,13 +326,15 @@ function addCheckButtonListener() {
 
 function cleanKanban() {
   if (todo !== null)
-  todo.innerHTML = '';
+    todo.innerHTML = '';
   if (doing !== null)
-  doing.innerHTML = '';
+    doing.innerHTML = '';
   if (done !== null)
-  done.innerHTML = '';
+    done.innerHTML = '';
 }
 
+// MELHORIA: 5. Repetição de Código e 2. Funções Longas. A geração do HTML do card é muito parecida para cada status. Seria melhor criar uma função `createTaskCard(task)` que gera o HTML base e apenas ajusta as partes que mudam (botão de ação, classes, etc.), evitando a repetição do HTML.
+// MELHORIA: 17. Responsividade. A injeção de HTML diretamente via `innerHTML` pode ser arriscada. O ideal é usar `document.createElement` e `appendChild` para construir os elementos, garantindo que as classes do Bootstrap sejam aplicadas corretamente e o layout não quebre.
 function showTaskInKanban(task) {
   const table = document.getElementById('tasksTable');
   let contentTodo = '';
@@ -389,6 +412,7 @@ function showTaskInKanban(task) {
   addCheckButtonListener();
 }
 
+// MELHORIA: 13. Performance. A função apaga e re-renderiza a tabela inteira a cada chamada. Para grandes volumes de dados, isso é ineficiente. A abordagem ideal seria identificar apenas as linhas que mudaram, foram adicionadas ou removidas.
 function showTasks(tarefas) {
 
   const table = document.getElementById('tasksTable');
@@ -490,6 +514,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       event.preventDefault()
 
+      // MELHORIA: 11. Validação de Formulários. A validação está misturada com a lógica de submissão. Seria melhor ter uma função `validateTask(task)` que retorna true/false e um objeto de erros, separando as responsabilidades.
       if (!formAddTask.checkValidity()) {
 
         checkInputValid(titleInput);
@@ -511,7 +536,7 @@ document.addEventListener('DOMContentLoaded', () => {
       };
 
       createTask(task);
-      
+
       formAddTask.reset();
       $('#modalAddTask').modal('toggle');
 
@@ -598,6 +623,9 @@ document.addEventListener('DOMContentLoaded', () => {
     })
   }
 
+  // MELHORIA: 5. Repetição de Código e 19. Documentação. A lógica de drag-and-drop para as três colunas (todo, doing, done) é muito similar e complexa. Isso deveria ser refatorado para uma função única que lida com o evento `onEnd` e determina a lógica baseada na coluna de origem e destino. Comentários explicando o fluxo seriam essenciais aqui.
+  // MELHORIA: 10. Padrão Observer. Em vez de manipular o DOM diretamente a cada evento de drop, o ideal seria disparar um evento customizado (ex: `tarefaMovida`). Outras partes da aplicação (como a tabela) poderiam "ouvir" esse evento e se atualizar, desacoplando a lógica do Kanban do resto da UI.
+  // MELHORIA: 18. Controle de Estado. A lógica depende da leitura de dados do DOM (ex: `droppedTask.querySelector('.id').innerText`). Seria mais robusto manter um array de tarefas em memória (um "estado") e atualizar a UI com base nas mudanças nesse array.
   if (todo !== null) {
     new Sortable(todo, {
       group: 'shared',
@@ -814,16 +842,19 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
+// MELHORIA: 2. Funções Longas (SRP). A função `carregaCalendario` tem muitas responsabilidades: busca dados da API, controla o loading, limpa e renderiza o Kanban, e inicializa/destroi o FullCalendar. Ela deveria ser dividida em funções menores como `fetchTasks`, `renderKanban` e `initializeCalendar`.
 function carregaCalendario(loading = false, reloadKanban = true) {
   fetch('http://localhost:4567/tarefas')
-  .then(response => response.json())
-  .then(data => {
+    .then(response => response.json())
+    .then(data => {
+      // MELHORIA: 8. Nomenclatura. 'data' poderia ser 'tasks' ou 'tarefas' para maior clareza.
       loading && toggleLoadingTasks();
       const calendar = document.getElementById('calendar');
       if (calendar !== null) {
         $('#calendar').fullCalendar('destroy');
       }
-      
+
+      // MELHORIA: 18. Controle de Estado. Em vez de re-renderizar o Kanban a cada chamada, a função poderia comparar o 'data' recebido com um estado local de tarefas e atualizar apenas o que mudou.
       reloadKanban && cleanKanban();
       if (data !== null) {
         reloadKanban && data.forEach(task => {
@@ -838,7 +869,7 @@ function carregaCalendario(loading = false, reloadKanban = true) {
       }
       jQuery(function () {
         jQuery('#calendar').fullCalendar({
-          
+
           businessHours: false,
           defaultView: 'month',
           editable: true,
@@ -871,7 +902,7 @@ function carregaCalendario(loading = false, reloadKanban = true) {
             }
             );
             showTask(eventoAtualizado.tarefaID, eventoAtualizado.usuarioID, eventoAtualizado.titulo, eventoAtualizado.descricao, eventoAtualizado.prazo, eventoAtualizado.prioridade, eventoAtualizado.status, eventoAtualizado.atrasada);
-          },  
+          },
           eventDrop: function (evento, delta, revertFunc) {
             let eventoAtualizado;
             data.forEach(task => {
@@ -989,3 +1020,17 @@ function carregaCalendario(loading = false, reloadKanban = true) {
       console.error('Error:', error);
     });
 }
+
+
+// MELHORIA: 20. Sugestão Arquitetural Final. A aplicação deste conjunto de melhorias resultaria em uma estrutura de projeto mais organizada e escalável, como:
+/*
+/frontend
+├── js/
+│   ├── api.js         // Funções de fetch
+│   ├── ui.js          // Funções que manipulam o DOM (modais, tabelas)
+│   ├── kanban.js      // Lógica do Sortable.js e do Kanban
+│   ├── calendar.js    // Lógica do FullCalendar
+│   ├── utils.js       // Funções utilitárias (formatDate, etc)
+│   └── main.js        // Ponto de entrada, coordena os outros módulos
+└── index.html
+*/
